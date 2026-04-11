@@ -5,19 +5,35 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  const handleAssessment = async () => {
-    setLoading(true);
-    // Simulate API call to FastAPI backend
-    setTimeout(() => {
-      setResult({
-        riskScore: 24,
-        status: "Low Risk",
-        explanation: "Consistent income and clean medical history.",
-        premium: 248
-      });
-      setLoading(false);
-    }, 2000);
-  };
+ const handleAssessment = async () => {
+  setLoading(true);
+  try {
+    const response = await fetch('http://localhost:8000/assess-risk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: "Yash Patil", // You can grab these from input state variables
+        age: 21,
+        income: 1200000
+      }),
+    });
+    
+    if (!response.ok) throw new Error("Backend connection failed");
+    
+    const data = await response.json();
+    setResult({
+      riskScore: data.risk_score,
+      status: data.status,
+      explanation: data.explanation,
+      premium: data.suggested_premium
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Make sure your FastAPI server is running on localhost:8000!");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#020617] text-white p-8 font-sans">
