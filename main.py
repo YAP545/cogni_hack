@@ -1,50 +1,38 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import uvicorn
 
-app = FastAPI(title="SureScore AI Underwriting API")
+app = FastAPI()
 
-class ApplicantData(BaseModel):
-    name: str
-    age: int
-    income: float
-
-@app.get("/")
-def home():
-    return {"status": "AI Underwriting Co-Pilot Active"}
-
-@app.post("/assess-risk")
-async def assess_risk(data: ApplicantData):
-    # This is where Langflow would be triggered to orchestrate:
-    # 1. Data Extraction (from unstructured inputs) [cite: 52]
-    # 2. Risk Prediction (XGBoost) [cite: 53, 71]
-    # 3. Explainability (SHAP) [cite: 73]
-    
-    # Placeholder logic for demonstration
-    risk_score = 24  # Example output from XGBoost model
-    explanation = "Income-to-age ratio indicates stability."
-    
-    return {
-        "risk_score": risk_score,
-        "status": "Low Risk",
-        "explanation": explanation,
-        "suggested_premium": 248.00
-    }
-
-@app.post("/upload-documents")
-async def upload_docs(file: File(...)):
-    # Connects to Data Extraction Agent [cite: 52]
-    return {"filename": file.filename, "status": "Parsing Unstructured Data..."}
-    from fastapi.middleware.cors import CORSMiddleware
-
-# ... (rest of your FastAPI code)
-
+# CRITICAL: Allow your website to talk to your backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace with your frontend URL
+    allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+class Applicant(BaseModel):
+    name: str
+    age: int
+    income: float
+
+@app.post("/assess-risk")
+async def assess(data: Applicant):
+    # Simulated Multi-Agent Logic [cite: 35, 43]
+    # In a full build, this triggers Langflow agents [cite: 46]
+    risk_score = 24 
+    status = "Low Risk"
+    explanation = "Stable income and age demographic lead to a low risk profile[cite: 103]."
+    
+    return {
+        "risk_score": risk_score,
+        "status": status,
+        "explanation": explanation,
+        "suggested_premium": 2480.0
+    }
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
