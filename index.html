@@ -7,182 +7,97 @@
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
-  text-align: center;
+  margin:0;
+  font-family: 'Segoe UI';
+  background:#0f172a;
+  color:white;
 }
 
-.screen {
-  display: none;
-  padding: 40px;
+section {
+  padding:60px 20px;
+  text-align:center;
 }
 
-.screen.active {
-  display: block;
+.hero {
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
 button {
-  padding: 10px 20px;
-  background: #7C3AED;
-  border: none;
-  color: white;
-  cursor: pointer;
-  margin-top: 10px;
+  padding:12px 25px;
+  background:#7C3AED;
+  border:none;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
 }
 
-#chatMessages {
-  height: 250px;
-  overflow-y: auto;
-  border: 1px solid #444;
-  margin: 10px;
-  padding: 10px;
+.cards {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
 }
 
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
+.card {
+  background:#1e293b;
+  padding:20px;
+  width:250px;
+  border-radius:10px;
 }
+
 </style>
 </head>
 
 <body>
 
-<canvas id="particleCanvas"></canvas>
-
-<div id="app">
-
-<!-- LANDING -->
-<section class="screen active" id="screen-landing">
+<!-- HERO -->
+<section class="hero">
   <h1>SureScore AI</h1>
-  <p>AI Underwriting Co-Pilot</p>
-  <button onclick="startAssessment()">Start Assessment</button>
+  <p>AI-Powered Insurance Underwriting Co-Pilot</p>
+  <button onclick="scrollToDemo()">Start Demo</button>
 </section>
 
-<!-- CHAT -->
-<section class="screen" id="screen-chat">
-  <h2>Chat</h2>
-  <div id="chatMessages"></div>
-  <div id="chatInputArea">
-    <input id="chatInput" placeholder="Type answer">
-    <button onclick="nextQuestion()">Next</button>
+<!-- PROBLEM -->
+<section>
+  <h2>Problem</h2>
+  <p>Manual underwriting takes 2–5 days, is costly, biased, and lacks transparency.</p>
+</section>
+
+<!-- SOLUTION -->
+<section>
+  <h2>Our Solution</h2>
+  <p>Multi-Agent AI system for automated, explainable underwriting.</p>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <h2>Features</h2>
+  <div class="cards">
+    <div class="card">📄 Document AI</div>
+    <div class="card">🧠 Risk Prediction</div>
+    <div class="card">📊 Explainable AI</div>
+    <div class="card">📜 Policy Generator</div>
   </div>
 </section>
 
-<!-- UPLOAD -->
-<section class="screen" id="screen-upload">
-  <h2>Upload</h2>
-  <input type="file" onchange="goProcessing()">
+<!-- DEMO -->
+<section id="demo">
+  <h2>Live Demo</h2>
+  <button onclick="startAssessment()">Start Assessment</button>
 </section>
 
-<!-- PROCESSING -->
-<section class="screen" id="screen-processing">
-  <h2>Processing...</h2>
-  <p id="procText">Starting...</p>
+<!-- FOOTER -->
+<section>
+  <p>Team NexusWeb | RIT Islampur</p>
 </section>
-
-<!-- RESULTS -->
-<section class="screen" id="screen-results">
-  <h2>Results</h2>
-  <h1 id="score">40 / 100</h1>
-  <p>Low Risk</p>
-</section>
-
-</div>
 
 <script>
-
-// ================= PARTICLES =================
-(function() {
-  const canvas = document.getElementById('particleCanvas');
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  let W, H;
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-
-  let particles = Array.from({length:80}, () => ({
-    x: Math.random()*W,
-    y: Math.random()*H,
-    vx: Math.random()-0.5,
-    vy: Math.random()-0.5
-  }));
-
-  function animate() {
-    requestAnimationFrame(animate);
-    ctx.clearRect(0,0,W,H);
-
-    particles.forEach(p=>{
-      p.x+=p.vx;
-      p.y+=p.vy;
-
-      ctx.fillStyle="#7C3AED";
-      ctx.fillRect(p.x,p.y,2,2);
-    });
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  animate();
-})();
-
-// ================= NAVIGATION =================
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s=>{
-    s.classList.remove('active');
-  });
-  document.getElementById(id).classList.add('active');
+function scrollToDemo(){
+  document.getElementById("demo").scrollIntoView({behavior:"smooth"});
 }
-
-// ================= FLOW =================
-function startAssessment() {
-  showScreen('screen-chat');
-  addMessage("What is your name?");
-}
-
-function addMessage(msg) {
-  const box = document.getElementById('chatMessages');
-  box.innerHTML += "<p>"+msg+"</p>";
-}
-
-let step = 0;
-
-function nextQuestion() {
-  const input = document.getElementById('chatInput').value;
-  addMessage("You: " + input);
-
-  step++;
-
-  if(step === 1) addMessage("Enter your age");
-  else if(step === 2) addMessage("Do you smoke?");
-  else {
-    showScreen('screen-upload');
-  }
-}
-
-function goProcessing() {
-  showScreen('screen-processing');
-
-  let i=0;
-  const texts = ["Analyzing...", "Calculating Risk...", "Generating Result..."];
-
-  const interval = setInterval(()=>{
-    document.getElementById('procText').innerText = texts[i];
-    i++;
-    if(i>=texts.length){
-      clearInterval(interval);
-      showScreen('screen-results');
-    }
-  },1000);
-}
-
 </script>
 
 </body>
