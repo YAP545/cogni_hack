@@ -3,152 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SureScore | AI Underwriting Dashboard</title>
+    <title>SureScore | AI-Powered Life Insurance Underwriting</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .accent-text { background: linear-gradient(90deg, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .step-pill { transition: all 0.3s ease; opacity: 0.4; }
-        .step-pill.active { opacity: 1; border-color: #6366f1; background: rgba(99, 102, 241, 0.1); }
-        .stage-content { display: none; }
-        .stage-content.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body { background-color: #f4f7f6; color: #333; font-family: 'Roboto', sans-serif; }
+        .lic-blue { background-color: #003366; }
+        .lic-yellow { background-color: #ffcc00; }
+        .lic-nav { background-color: #ffffff; border-bottom: 2px solid #003366; }
+        .hidden-view { display: none; }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-    <nav class="p-6 border-b border-white/5 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="p-2 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/20">
-                    <i class="fas fa-shield-halved text-white text-lg"></i>
-                </div>
-                <span class="text-xl font-extrabold tracking-tighter accent-text">SURESCORE AI</span>
+    <div class="lic-blue py-1 px-12 flex justify-between items-center text-white text-[11px]">
+        <div class="flex gap-4">
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-linkedin"></i>
+            <i class="fab fa-youtube"></i>
+        </div>
+        <div class="flex gap-6 font-medium">
+            <span>Customer Care: 1800-SURE-SCORE</span>
+            <span>Agent Login</span>
+            <span>English <i class="fas fa-chevron-down ml-1"></i></span>
+        </div>
+    </div>
+
+    <header class="bg-white px-12 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-4">
+            <div class="lic-blue p-3 rounded-md">
+                <i class="fas fa-shield-halved text-white text-2xl"></i>
             </div>
-            <div class="flex items-center gap-4">
-                <div id="agent-status" class="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase">
-                    <i class="fas fa-robot animate-pulse mr-2"></i> Identity Agent: Active
-                </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-[#003366]">SURESCORE</h1>
+                <p class="text-[10px] font-bold text-[#003366] uppercase tracking-tighter">AI Underwriting Co-Pilot</p>
             </div>
+        </div>
+        <div class="flex gap-4 items-center">
+            <div class="relative">
+                <input type="text" placeholder="Search products..." class="border border-slate-300 rounded-md py-2 px-4 pr-10 text-sm w-64 outline-none">
+                <i class="fas fa-search absolute right-3 top-3 text-slate-400 text-xs"></i>
+            </div>
+            <button class="lic-yellow text-[#003366] font-bold px-6 py-2 rounded-md text-sm shadow-sm hover:brightness-95 transition-all" onclick="showView('assessment-view')">BUY ONLINE</button>
+        </div>
+    </header>
+
+    <nav class="lic-nav px-12 py-3 sticky top-0 z-50">
+        <div class="flex gap-8 text-[13px] font-bold text-[#003366] uppercase">
+            <a href="#" class="hover:text-blue-500" onclick="showView('home-view')">Home</a>
+            <a href="#" class="hover:text-blue-500">About AI Agents</a>
+            <a href="#" class="hover:text-blue-500">Life Insurance</a>
+            <a href="#" class="hover:text-blue-500">Group Business</a>
+            <a href="#" class="hover:text-blue-500">Investor Relations</a>
+            <a href="#" class="hover:text-blue-500 text-red-600">Pay Premium</a>
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-6 mt-8 grid grid-cols-4 gap-4">
-        <div id="pill-1" class="step-pill active p-3 rounded-xl border border-white/5 text-center text-[10px] font-bold uppercase">01. Identity</div>
-        <div id="pill-2" class="step-pill p-3 rounded-xl border border-white/5 text-center text-[10px] font-bold uppercase">02. Health</div>
-        <div id="pill-3" class="step-pill p-3 rounded-xl border border-white/5 text-center text-[10px] font-bold uppercase">03. Lifestyle</div>
-        <div id="pill-4" class="step-pill p-3 rounded-xl border border-white/5 text-center text-[10px] font-bold uppercase">04. Documents</div>
-    </div>
-
-    <main class="max-w-7xl mx-auto px-6 grid lg:grid-cols-5 gap-8 mt-8 pb-20">
-        
-        <div class="lg:col-span-2 space-y-6">
-            <div class="glass-card p-8 rounded-3xl shadow-2xl relative">
-                
-                <div id="stage-1" class="stage-content active space-y-4">
-                    <h2 class="text-2xl font-bold mb-6">New Application</h2>
-                    <label class="text-[10px] font-bold text-slate-500 uppercase">Full Legal Name</label>
-                    <input id="name" type="text" placeholder="e.g. Yash Patil" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none text-white focus:border-indigo-500">
-                    <button onclick="nextStage(2)" class="w-full bg-indigo-600 p-4 rounded-xl font-black uppercase tracking-widest text-xs">Continue to Health</button>
-                </div>
-
-                <div id="stage-2" class="stage-content space-y-4">
-                    <h2 class="text-2xl font-bold mb-6">Health Profile</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <input id="age" type="number" placeholder="Age" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none">
-                        <input id="bmi" type="number" placeholder="BMI" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none">
-                    </div>
-                    <select id="smoker" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none">
-                        <option value="0">Non-Smoker</option>
-                        <option value="1">Smoker</option>
-                    </select>
-                    <button onclick="nextStage(3)" class="w-full bg-indigo-600 p-4 rounded-xl font-black uppercase tracking-widest text-xs">Continue to Lifestyle</button>
-                </div>
-
-                <div id="stage-3" class="stage-content space-y-4">
-                    <h2 class="text-2xl font-bold mb-6">Lifestyle</h2>
-                    <input id="income" type="number" placeholder="Annual Income (₹)" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none">
-                    <select id="occupation" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none">
-                        <option value="desk">Desk Job</option>
-                        <option value="field">Field Work</option>
-                        <option value="hazardous">Hazardous</option>
-                    </select>
-                    <button onclick="nextStage(4)" class="w-full bg-indigo-600 p-4 rounded-xl font-black uppercase tracking-widest text-xs">Continue to Documents</button>
-                </div>
-
-                <div id="stage-4" class="stage-content space-y-4">
-                    <h2 class="text-2xl font-bold mb-6">Ingestion</h2>
-                    <label class="border-2 border-dashed border-slate-800 p-8 rounded-2xl text-center bg-slate-900/30 block cursor-pointer hover:border-indigo-500">
-                        <input type="file" id="pdfUpload" class="hidden">
-                        <i class="fas fa-file-pdf text-3xl text-slate-700 mb-2"></i>
-                        <p class="text-[10px] text-slate-500 uppercase font-bold">Upload Medical/Vehicle Report</p>
-                    </label>
-                    <button onclick="runFinalAssessment()" id="runBtn" class="w-full bg-indigo-600 p-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-indigo-500/20">Run AI Pipeline</button>
+    <main id="home-view" class="max-w-7xl mx-auto px-12 py-16">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-4xl font-extrabold text-[#003366] leading-tight mb-6">Experience the Next Generation of Insurance Underwriting.</h2>
+                <p class="text-slate-600 text-lg mb-8">SureScore uses a Multi-Agent AI Pipeline to automate risk prediction and policy generation in under 5 minutes.</p>
+                <div class="flex gap-4">
+                    <button class="lic-blue text-white px-8 py-4 rounded-md font-bold text-sm shadow-lg hover:bg-blue-900 transition-all" onclick="showView('assessment-view')">Get Started</button>
+                    <button class="border-2 border-[#003366] text-[#003366] px-8 py-4 rounded-md font-bold text-sm hover:bg-slate-50">Learn More</button>
                 </div>
             </div>
-        </div>
-
-        <div id="results" class="lg:col-span-3">
-            <div class="h-full min-h-[450px] glass-card rounded-3xl flex flex-col items-center justify-center text-slate-600 text-center p-12 border-dashed border-2 border-slate-800">
-                <i class="fas fa-terminal opacity-20 text-4xl mb-4"></i>
-                <p class="italic text-sm">System ready for Agentic Ingestion. <br> Complete the stages to trigger the Multi-Agent Pipeline.</p>
+            <div class="bg-white p-8 rounded-xl shadow-xl border border-slate-100 flex items-center justify-center">
+                <i class="fas fa-robot text-[150px] text-slate-100 animate-pulse"></i>
             </div>
         </div>
     </main>
 
-    <script>
-        function nextStage(num) {
-            // Hide all stages
-            document.querySelectorAll('.stage-content').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.step-pill').forEach(p => p.classList.remove('active'));
+    <main id="assessment-view" class="hidden-view max-w-4xl mx-auto px-6 py-16">
+        <div class="bg-white p-10 rounded-xl shadow-2xl border-t-8 border-[#003366]">
+            <h3 class="text-2xl font-bold text-[#003366] mb-8 flex items-center gap-3">
+                <i class="fas fa-id-card"></i> New Policy Application
+            </h3>
             
-            // Show requested stage
-            document.getElementById(`stage-${num}`).classList.add('active');
-            document.getElementById(`pill-${num}`).classList.add('active');
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="space-y-4">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Applicant Details</label>
+                    <input id="name" type="text" placeholder="Full Legal Name" class="w-full border border-slate-300 p-4 rounded-md outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <input id="age" type="number" placeholder="Age" class="w-full border border-slate-300 p-4 rounded-md text-sm">
+                    <input id="income" type="number" placeholder="Annual Income (₹)" class="w-full border border-slate-300 p-4 rounded-md text-sm">
+                </div>
+                <div class="space-y-4">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Document Ingestion (OCR Agent)</label>
+                    <div class="border-2 border-dashed border-slate-200 p-10 rounded-md text-center bg-slate-50 hover:border-blue-500 transition-all cursor-pointer">
+                        <i class="fas fa-file-upload text-3xl text-slate-300 mb-3"></i>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Upload Medical Report</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="runPipeline()" id="runBtn" class="w-full lic-blue text-white py-5 rounded-md font-bold uppercase tracking-widest text-xs hover:bg-blue-900 shadow-lg">Assess Risk Profile</button>
+        </div>
+    </main>
 
-            // Update Agent Telemetry
-            const agentNames = ["", "Identity Agent", "Health Agent", "Lifestyle Agent", "OCR Agent"];
-            document.getElementById('agent-status').innerHTML = `<i class="fas fa-robot animate-pulse mr-2"></i> ${agentNames[num]}: Active`;
+    <main id="output-view" class="hidden-view max-w-4xl mx-auto px-6 py-16">
+        <div id="results-container"></div>
+    </main>
+
+    <script>
+        // Router: View Switcher
+        function showView(viewId) {
+            document.querySelectorAll('main').forEach(v => v.classList.add('hidden-view'));
+            document.getElementById(viewId).classList.remove('hidden-view');
+            window.scrollTo(0,0);
         }
 
-        async function runFinalAssessment() {
+        async function runPipeline() {
             const btn = document.getElementById('runBtn');
-            const res = document.getElementById('results');
-            btn.innerHTML = "PIPELINE RUNNING..."; btn.disabled = true;
+            const outputView = document.getElementById('output-view');
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> AGENTS PROCESSING...';
+            btn.disabled = true;
 
-            // Simulate the Multi-Agent Flow 
-            res.innerHTML = `<div class="flex flex-col items-center"><i class="fas fa-circle-notch animate-spin text-indigo-500 text-4xl mb-4"></i><p class="accent-text font-bold uppercase tracking-widest text-xs">Executing Multi-Agent Orchestration...</p></div>`;
-            
-            setTimeout(async () => {
+            try {
                 const response = await fetch("https://surescore-api.onrender.com/assess-risk", {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        name: document.getElementById('name').value,
-                        age: document.getElementById('age').value,
-                        income: document.getElementById('income').value
+                        name: document.getElementById('name').value || "Guest",
+                        age: parseInt(document.getElementById('age').value) || 25,
+                        income: parseFloat(document.getElementById('income').value) || 500000
                     })
                 });
                 const data = await response.json();
                 
-                res.innerHTML = `
-                    <div class="glass-card p-8 rounded-3xl border-t-4 border-indigo-500 shadow-2xl animate-in fade-in duration-500">
-                        <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Decision: AI-Verified [cite: 52]</h3>
-                            <div class="text-xs text-emerald-400 font-bold uppercase">${data.status}</div>
+                document.getElementById('results-container').innerHTML = `
+                    <div class="bg-white p-12 rounded-xl shadow-2xl border-t-8 border-[#003366] animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div class="flex justify-between items-center mb-10">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">AI-Verified Risk Decision</h3>
+                            <div class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded uppercase border border-emerald-200">${data.status}</div>
                         </div>
-                        <div class="text-8xl font-black tracking-tighter mb-8">${data.risk_score}<span class="text-2xl text-slate-700 font-bold italic">/100</span></div>
-                        <div class="bg-slate-950/50 p-6 rounded-2xl border border-white/5">
-                            <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-3">SHAP Insights [cite: 50]</div>
-                            <p class="text-slate-300 italic text-sm leading-relaxed border-l-2 border-indigo-500/30 pl-4">"${data.explanation}"</p>
+                        <div class="text-9xl font-black text-[#003366] tracking-tighter mb-10">${data.risk_score}<span class="text-3xl text-slate-300 font-bold italic">/100</span></div>
+                        <div class="bg-slate-50 p-8 rounded-md border border-slate-100">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i class="fas fa-brain text-blue-600"></i> SHAP XAI Explainability Agent
+                            </div>
+                            <p class="text-[#003366] italic font-medium leading-relaxed">"${data.explanation}"</p>
                         </div>
-                        <button class="mt-8 bg-white text-black w-full p-4 rounded-xl font-bold uppercase text-xs">Approve Policy </button>
+                        <div class="mt-10 grid grid-cols-2 gap-6">
+                            <div class="p-6 bg-slate-50 rounded-md border border-slate-100">
+                                <div class="text-[10px] text-slate-400 uppercase font-bold mb-1">Monthly Premium</div>
+                                <div class="text-3xl font-black text-[#003366]">₹${data.suggested_premium}</div>
+                            </div>
+                            <button class="lic-yellow text-[#003366] rounded-md font-bold uppercase text-sm shadow-md hover:brightness-95 transition-all">APPROVE POLICY (Human-in-the-loop)</button>
+                        </div>
                     </div>
                 `;
-            }, 1500);
+                showView('output-view');
+            } catch (err) {
+                alert("API Error: Please ensure your Render backend is running.");
+            } finally {
+                btn.innerHTML = 'Assess Risk Profile';
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
