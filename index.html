@@ -3,134 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SureScore AI | Underwriting Platform</title>
+    <title>SureScore | AI Underwriting Platform</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
-        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; overflow-x: hidden;}
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .accent-text { background: linear-gradient(90deg, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* State Handling */
-        #appDashboard { display: none; } /* Hidden by default */
-        .fade-in { animation: fadeIn 0.5s ease-in forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Persistent z-index for chatbot */
+        #chatWindow { z-index: 9999 !important; }
+        #chatButton { z-index: 10000 !important; }
+
+        /* Animation for stage transitions */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="landingPage" class="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-slate-950 to-indigo-950">
-        <div class="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl mb-8">
-            <i class="fas fa-shield-halved text-white text-4xl"></i>
+    <div id="landingStage" class="min-h-screen flex flex-col items-center justify-center p-6 text-center fade-in bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950 via-slate-950 to-black">
+        <div class="w-24 h-24 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-indigo-500/20 mb-8 border border-indigo-400/30">
+            <i class="fas fa-shield-halved text-white text-5xl"></i>
         </div>
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tighter">
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4">
             Next-Gen <span class="accent-text">SureScore</span>
         </h1>
-        <p class="text-slate-400 max-w-xl text-lg mb-10">
-            Automated Underwriting powered by Multi-Agent AI. <br>
-            From days of manual work to seconds of precision.
+        <p class="text-slate-400 max-w-2xl text-lg mb-12 leading-relaxed">
+            Revolutionizing insurance underwriting with a multi-agent AI architecture. 
+            Automate data extraction, risk analysis, and policy generation in under 5 minutes.
         </p>
-        <button onclick="goToDashboard()" class="bg-indigo-500 hover:bg-indigo-400 text-white px-12 py-5 rounded-full font-black uppercase tracking-[0.2em] text-sm shadow-2xl shadow-indigo-500/40 transition-all active:scale-95">
-            Launch Platform <i class="fas fa-arrow-right ml-2"></i>
+        <button onclick="startFlow()" class="bg-indigo-500 hover:bg-indigo-400 text-white px-12 py-5 rounded-full font-black uppercase tracking-[0.3em] text-sm shadow-2xl shadow-indigo-500/50 transition-all hover:shadow-indigo-500/80 active:scale-95">
+            Launch Platform <i class="fas fa-arrow-right ml-2 text-xs"></i>
         </button>
     </div>
 
-    <div id="appDashboard" class="fade-in">
-        <nav class="p-6 border-b border-white/10 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center">
-            <span class="text-xl font-black accent-text tracking-tighter">SURESCORE AI</span>
-            <div class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-full">
-                LIVE ENGINE
+    <div id="dashboardStage" class="min-h-screen hidden fade-in">
+        <nav class="p-6 border-b border-white/5 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-xl font-extrabold tracking-tighter accent-text">SURESCORE AI</span>
+            </div>
+            <div class="hidden md:flex items-center gap-6">
+                <div class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase">
+                    <i class="fas fa-bolt animate-pulse mr-2"></i> Engine: Online
+                </div>
             </div>
         </nav>
 
-        <main class="max-w-7xl mx-auto px-6 py-12 grid lg:grid-cols-5 gap-8">
-            <div class="lg:col-span-2">
-                <div class="glass p-8 rounded-3xl">
-                    <h3 class="text-xl font-bold mb-6">Risk Assessment</h3>
+        <main class="max-w-7xl mx-auto px-6 grid lg:grid-cols-5 gap-8 mt-12 pb-20">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass-card p-8 rounded-3xl shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-id-card text-indigo-400 text-sm"></i> New Application
+                    </h2>
                     <div class="space-y-4">
-                        <input id="name" type="text" placeholder="Full Name" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:border-indigo-500 text-white">
+                        <input id="name" type="text" placeholder="Full Legal Name" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-white">
                         <div class="grid grid-cols-2 gap-4">
                             <input id="age" type="number" placeholder="Age" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none text-white">
                             <input id="income" type="number" placeholder="Income (₹)" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none text-white">
                         </div>
-                        <button onclick="runAI()" id="runBtn" class="w-full bg-indigo-600 p-4 rounded-xl font-bold uppercase tracking-widest text-xs">
-                            Analyze Profile
+                        <div class="border-2 border-dashed border-slate-800 p-6 rounded-2xl text-center bg-slate-900/30">
+                            <i class="fas fa-file-pdf text-2xl text-slate-700 mb-2"></i>
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Data Ingestion (OCR)</p>
+                            <p class="text-[9px] text-slate-600 italic">Agent handles unstructured medical reports</p>
+                        </div>
+                        <button onclick="runAssessment()" id="runBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 p-4 rounded-xl font-extrabold text-white uppercase tracking-widest text-xs transition-all shadow-lg shadow-indigo-500/20">
+                            Process Risk Profile
                         </button>
                     </div>
                 </div>
             </div>
+
             <div id="results" class="lg:col-span-3">
-                <div class="h-full min-h-[400px] glass rounded-3xl flex flex-col items-center justify-center text-slate-500 italic text-center p-12">
+                <div class="h-full min-h-[400px] glass-card rounded-3xl flex flex-col items-center justify-center text-slate-500 text-center p-12 border-dashed border-2 border-slate-800">
                     <i class="fas fa-robot text-4xl mb-4 opacity-20"></i>
-                    Awaiting Ingestion...
+                    <p class="italic text-sm">Awaiting applicant data Ingestion. <br> Agents ready to begin Multi-Agent AI Pipeline.</p>
                 </div>
             </div>
         </main>
     </div>
 
-    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl z-[1000]">
-        <i class="fas fa-comment-dots text-white text-2xl"></i>
+    <button id="chatButton" onclick="toggleChat()" class="fixed bottom-6 right-6 w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform border-2 border-indigo-300/30 group">
+        <i class="fas fa-comment-dots text-white text-2xl group-hover:rotate-12 transition-transform"></i>
     </button>
 
-    <div id="chatBox" class="fixed bottom-24 right-6 w-80 h-96 glass rounded-3xl shadow-2xl hidden flex-col overflow-hidden z-[999]">
-        <div class="p-4 bg-indigo-600 flex justify-between items-center text-[10px] font-bold uppercase">
-            <span>Nexus Assistant</span>
-            <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
+    <div id="chatWindow" class="fixed bottom-24 right-6 w-80 h-[450px] glass-card rounded-3xl shadow-2xl hidden flex flex-col overflow-hidden border border-white/10 shadow-indigo-500/10">
+        <div class="p-4 bg-indigo-600 border-b border-indigo-400/20 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-white">Nexus Assistant</span>
+            </div>
+            <button onclick="toggleChat()" class="text-white/70 hover:text-white"><i class="fas fa-times"></i></button>
         </div>
-        <div id="chatLogs" class="flex-1 p-4 overflow-y-auto space-y-3 text-[11px]">
-            <div class="bg-indigo-500/10 p-2 rounded-lg">Welcome! How can I assist with this underwriting case?</div>
+        <div id="chatContent" class="flex-1 p-4 overflow-y-auto space-y-4 text-[11px] scrollbar-hide">
+            <div class="bg-indigo-500/20 p-3 rounded-2xl border border-indigo-500/20 text-slate-300">
+                Hi **Yash**! I'm the SureScore LLM Agent. How can I guide you through this underwriting process?
+            </div>
         </div>
-        <div class="p-3 bg-slate-900 flex gap-2">
-            <input id="chatIn" type="text" class="flex-1 bg-black border border-slate-800 rounded p-2 text-[10px] text-white">
-            <button onclick="sendMsg()" class="bg-indigo-600 px-3 rounded"><i class="fas fa-paper-plane text-white"></i></button>
+        <div class="p-3 bg-slate-900 border-t border-white/10 flex gap-2">
+            <input id="chatInput" type="text" placeholder="Ask about SHAP logic..." 
+                   class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-[10px] outline-none text-white focus:border-indigo-500"
+                   onkeypress="if(event.key === 'Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()" class="bg-indigo-600 px-4 rounded-lg hover:bg-indigo-500">
+                <i class="fas fa-paper-plane text-white text-[10px]"></i>
+            </button>
         </div>
     </div>
 
     <script>
-        // Transition Function
-        function goToDashboard() {
-            document.getElementById('landingPage').style.display = 'none';
-            document.getElementById('appDashboard').style.display = 'block';
+        // 1. Stage Management: Transition from Landing to Dashboard
+        function startFlow() {
+            // Flowchart Branch: User Input Layer activated
+            document.getElementById('landingStage').style.display = 'none';
+            const dashboard = document.getElementById('dashboardStage');
+            dashboard.classList.remove('hidden');
         }
 
-        // Chatbot Function
-        function toggleChat() { document.getElementById('chatBox').classList.toggle('hidden'); }
-        function sendMsg() {
-            const input = document.getElementById('chatIn');
-            const logs = document.getElementById('chatLogs');
-            if (!input.value) return;
-            logs.innerHTML += `<div class="bg-indigo-600 p-2 rounded-lg ml-auto w-fit max-w-[80%]">${input.value}</div>`;
+        // 2. Persistent Chatbot Logic (Backend API Layer / LLM Agent)
+        function toggleChat() { document.getElementById('chatWindow').classList.toggle('hidden'); }
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const content = document.getElementById('chatContent');
+            if (!input.value.trim()) return;
+            content.innerHTML += `<div class="bg-indigo-600 p-3 rounded-2xl max-w-[85%] ml-auto text-right text-white shadow-md">${input.value}</div>`;
+            const val = input.value.toLowerCase();
             input.value = "";
-            logs.scrollTop = logs.scrollHeight;
+            content.scrollTop = content.scrollHeight;
+            setTimeout(() => {
+                let resp = "Analyzing that through the agentic pipeline... [Cite: 107]";
+                if (val.includes("risk")) resp = "Risk is scored using XGBoost [Cite: 71]. This score is low, indicating high stability.";
+                if (val.includes("why")) resp = "I use SHAP Explainability [Cite: 73] to show income-to-age stability is the key factor.";
+                content.innerHTML += `<div class="bg-slate-800/80 p-3 rounded-2xl border border-white/5 max-w-[85%] text-slate-300"><i class="fas fa-robot mr-1 text-indigo-400"></i> ${resp}</div>`;
+                content.scrollTop = content.scrollHeight;
+            }, 800);
         }
 
-        // API Function
-        async function runAI() {
+        // 3. Multi-Agent AI Pipeline Logic (Flowchart Core)
+        async function runAssessment() {
             const btn = document.getElementById('runBtn');
-            const res = document.getElementById('results');
-            btn.innerHTML = "ANALYZING...";
+            const resDiv = document.getElementById('results');
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> ANALYZING...';
             btn.disabled = true;
+
             try {
                 const response = await fetch("https://surescore-api.onrender.com/assess-risk", {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        name: document.getElementById('name').value || "Yash",
-                        age: parseInt(document.getElementById('age').value) || 21,
-                        income: parseFloat(document.getElementById('income').value) || 1200000
+                        name: document.getElementById('name').value || "Guest",
+                        age: parseInt(document.getElementById('age').value) || 25,
+                        income: parseFloat(document.getElementById('income').value) || 500000
                     })
                 });
+
+                if (!response.ok) throw new Error();
                 const data = await response.json();
-                res.innerHTML = `<div class="glass p-8 rounded-3xl fade-in border-t-4 border-indigo-500">
-                    <div class="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-widest">Risk Score</div>
-                    <div class="text-8xl font-black mb-6">${data.risk_score}</div>
-                    <p class="text-slate-300 italic text-sm bg-black/40 p-4 rounded-xl border border-white/5">"${data.explanation}"</p>
-                </div>`;
-            } catch (e) {
-                res.innerHTML = `<div class="text-rose-500 font-bold">Error: Wake up the Render Engine.</div>`;
+                
+                // Final Stage Branch: Human Decision / Output Dashboard
+                resDiv.innerHTML = `
+                    <div class="glass-card p-8 rounded-3xl border-t-4 border-indigo-500 shadow-2xl animate-in fade-in duration-500">
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Decision: AI-Verified</span>
+                            <div class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded uppercase border border-emerald-500/20">${data.status}</div>
+                        </div>
+                        <div class="text-8xl font-black tracking-tighter mb-8 text-white">${data.risk_score}<span class="text-2xl text-slate-700 italic">/100</span></div>
+                        <div class="bg-slate-950/80 p-6 rounded-2xl border border-white/5">
+                            <div class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <i class="fas fa-brain text-indigo-400"></i> SHAP XAI Insights [Cite: 73]
+                            </div>
+                            <p class="text-slate-300 italic text-sm leading-relaxed border-l-2 border-indigo-500/30 pl-4">"${data.explanation}"</p>
+                        </div>
+                        <div class="mt-8 grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-slate-900 rounded-xl border border-white/5">
+                                <div class="text-[9px] text-slate-500 uppercase font-bold">Calculated Premium</div>
+                                <div class="text-xl font-bold text-cyan-400">₹${data.suggested_premium}</div>
+                            </div>
+                            <button class="bg-white text-black rounded-xl font-black uppercase text-[10px] hover:bg-slate-200 transition-all">Approve Policy (Human Decision Layer)</button>
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                resDiv.innerHTML = `<div class="glass-card p-12 rounded-3xl text-rose-500 font-bold uppercase text-center border-2 border-rose-500/20 bg-rose-500/5">Connection Error. Is Render awake?</div>`;
             } finally {
-                btn.innerHTML = "Analyze Profile";
+                btn.innerHTML = 'Process Risk Profile';
                 btn.disabled = false;
             }
         }
