@@ -10,7 +10,7 @@
 
 <body>
 
-<!-- REQUIRED CANVAS -->
+<!-- Background -->
 <canvas id="particleCanvas"></canvas>
 
 <div id="app">
@@ -18,19 +18,20 @@
     <!-- LANDING -->
     <section class="screen active" id="screen-landing">
         <h1>SureScore AI</h1>
+        <p>AI Underwriting Co-Pilot</p>
         <button onclick="startAssessment()">Start Assessment</button>
     </section>
 
     <!-- CHAT -->
     <section class="screen" id="screen-chat" style="display:none;">
-        <h2>Chat</h2>
+        <h2>AI Chat</h2>
         <div id="chatMessages"></div>
         <div id="chatInputArea"></div>
     </section>
 
     <!-- UPLOAD -->
     <section class="screen" id="screen-upload" style="display:none;">
-        <h2>Upload</h2>
+        <h2>Upload Documents</h2>
         <input type="file" multiple onchange="handleFileSelect(event)">
         <div id="fileList"></div>
 
@@ -47,24 +48,24 @@
 
     <!-- PROCESSING -->
     <section class="screen" id="screen-processing" style="display:none;">
-        <h2>Processing</h2>
+        <h2>Processing...</h2>
         <div id="procLog"></div>
-        <span id="factorsVal"></span>
-        <span id="confVal"></span>
-        <span id="timeVal"></span>
+        <p>Factors: <span id="factorsVal">0</span></p>
+        <p>Confidence: <span id="confVal">0%</span></p>
+        <p>Time: <span id="timeVal">0s</span></p>
     </section>
 
     <!-- RESULTS -->
     <section class="screen" id="screen-results" style="display:none;">
+        <h2>Results</h2>
         <canvas id="gaugeCanvas" width="300" height="300"></canvas>
-        <h2 id="gaugeNum"></h2>
+        <h3 id="gaugeNum">0</h3>
         <div id="riskLevelText"></div>
-        <div id="premiumVal"></div>
+        <h3 id="premiumVal">$0/mo</h3>
     </section>
 
 </div>
 
 <script src="app.js"></script>
-
 </body>
 </html>
