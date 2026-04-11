@@ -3,153 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SureScore AI | Conversational Underwriting</title>
+    <title>SureScore | AI Underwriting Co-Pilot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #0b0e1a; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
-        .sidebar { background: #0f1225; border-right: 1px solid rgba(255,255,255,0.05); }
-        .chat-bubble { background: rgba(30, 34, 61, 0.6); border: 1px solid rgba(99, 102, 241, 0.2); backdrop-filter: blur(10px); }
-        .glass-input { background: rgba(15, 18, 36, 0.8); border: 1px solid rgba(255,255,255,0.1); }
-        .progress-circle { width: 12px; height: 12px; border: 2px solid #312e81; border-radius: 50%; transition: all 0.3s; }
-        .step-active .progress-circle { background: #6366f1; border-color: #6366f1; box-shadow: 0 0 10px #6366f1; }
-        .step-active { color: #fff; opacity: 1 !important; }
+        
+        :root {
+            --bg-deep: #05070a;
+            --panel-bg: #0d0f1a;
+            --accent: #6366f1;
+            --text-main: #f8fafc;
+        }
+
+        body { 
+            background-color: var(--bg-deep); 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow: hidden; 
+        }
+
+        .custom-sidebar { 
+            background: var(--panel-bg); 
+            border-right: 1px solid rgba(255,255,255,0.03); 
+        }
+
+        .stage-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.3;
+        }
+
+        .stage-card.active {
+            opacity: 1;
+            transform: translateX(10px);
+        }
+
+        .chat-container::-webkit-scrollbar { display: none; }
+
+        .ai-bubble {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.7));
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            backdrop-filter: blur(12px);
+        }
+
+        .user-bubble {
+            background: var(--accent);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .input-area {
+            background: rgba(13, 15, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
     </style>
 </head>
 <body class="flex h-screen">
 
-    <aside class="w-80 sidebar p-8 flex flex-col">
-        <div class="flex items-center gap-3 mb-12">
-            <div class="p-2 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/20">
-                <i class="fas fa-shield-halved text-white text-lg"></i>
+    <aside class="w-80 custom-sidebar p-10 flex flex-col">
+        <div class="flex items-center gap-3 mb-16">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-shield-halved text-white"></i>
             </div>
-            <span class="text-xl font-extrabold tracking-tighter italic">SureScore</span>
+            <span class="text-2xl font-black tracking-tighter italic uppercase">SureScore</span>
         </div>
 
-        <div class="flex-1 space-y-6">
-            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Assessment Progress</div>
-            
-            <div id="step-personal" class="flex items-center justify-between opacity-40 step-active transition-all">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400"><i class="fas fa-user"></i></div>
-                    <div class="text-xs font-bold">Personal Info</div>
-                </div>
-                <div class="progress-circle"></div>
+        <nav class="flex-1 space-y-10">
+            <div id="nav-personal" class="stage-card active flex items-center gap-5">
+                <div class="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_10px_#6366f1]"></div>
+                <span class="text-xs font-bold uppercase tracking-[0.2em]">01. Identity</span>
             </div>
+            <div id="nav-health" class="stage-card flex items-center gap-5">
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
+                <span class="text-xs font-bold uppercase tracking-[0.2em]">02. Health</span>
+            </div>
+            <div id="nav-lifestyle" class="stage-card flex items-center gap-5">
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
+                <span class="text-xs font-bold uppercase tracking-[0.2em]">03. Lifestyle</span>
+            </div>
+            <div id="nav-docs" class="stage-card flex items-center gap-5">
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
+                <span class="text-xs font-bold uppercase tracking-[0.2em]">04. Ingestion</span>
+            </div>
+        </nav>
 
-            <div id="step-health" class="flex items-center justify-between opacity-40 transition-all">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400"><i class="fas fa-heart"></i></div>
-                    <div class="text-xs font-bold">Health Profile</div>
-                </div>
-                <div class="progress-circle"></div>
-            </div>
-
-            <div id="step-lifestyle" class="flex items-center justify-between opacity-40 transition-all">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400"><i class="fas fa-running"></i></div>
-                    <div class="text-xs font-bold">Lifestyle</div>
-                </div>
-                <div class="progress-circle"></div>
-            </div>
-
-            <div id="step-docs" class="flex items-center justify-between opacity-40 transition-all">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400"><i class="fas fa-file-invoice"></i></div>
-                    <div class="text-xs font-bold">Documents</div>
-                </div>
-                <div class="progress-circle"></div>
-            </div>
-        </div>
-
-        <div class="mt-auto p-4 rounded-2xl bg-indigo-900/10 border border-indigo-500/20">
-            <div class="text-[10px] font-bold text-indigo-400 uppercase mb-2 flex items-center gap-2">
-                <i class="fas fa-robot"></i> AI Tip
-            </div>
-            <p id="ai-tip" class="text-[10px] text-slate-400 leading-relaxed">Providing accurate info helps the agents predict risk better.</p>
+        <div class="mt-auto p-6 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+            <p class="text-[10px] text-indigo-300 font-semibold leading-relaxed">
+                <i class="fas fa-info-circle mr-2"></i>
+                Every input is validated by our Compliance Agent in real-time.
+            </p>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col bg-[#0b0e1a] relative">
-        <header class="p-6 flex justify-between items-center border-b border-white/5">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-lg"><i class="fas fa-robot text-white"></i></div>
+    <main class="flex-1 flex flex-col relative">
+        <header class="h-24 px-12 flex justify-between items-center border-b border-white/5">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <img src="https://ui-avatars.com/api/?name=AI&background=6366f1&color=fff" class="w-10 h-10 rounded-full border border-indigo-400/20" alt="AI">
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-[#05070a] rounded-full"></div>
+                </div>
                 <div>
-                    <div class="text-sm font-bold">SureScore AI Engine</div>
-                    <div class="text-[10px] text-emerald-400 flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Analyzing Policy Logic
-                    </div>
+                    <h2 class="text-sm font-bold">SureScore Co-Pilot</h2>
+                    <p class="text-[10px] text-slate-500 font-medium">Multi-Agent Pipeline Active </p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-bold text-slate-400">
+                    LATENCY: 12ms
                 </div>
             </div>
         </header>
 
-        <div id="chat-flow" class="flex-1 p-12 overflow-y-auto space-y-6">
-            <div class="chat-bubble p-6 rounded-3xl max-w-xl animate-in fade-in slide-in-from-bottom-4">
+        <div id="chat-flow" class="flex-1 px-12 py-8 overflow-y-auto chat-container space-y-8">
+            <div class="ai-bubble p-6 rounded-2xl rounded-tl-none max-w-lg animate-in fade-in slide-in-from-left-4 duration-500">
                 <p class="text-sm leading-relaxed text-slate-200">
-                    Hello! I'm your **AI Underwriting Co-Pilot** 🤖<br><br>
-                    Let's start with your **full name**. This helps the agents personalize your assessment.
+                    Welcome to the future of underwriting.<br><br>
+                    To begin the **Identity Extraction**, please provide your **Full Name**.
                 </p>
             </div>
         </div>
 
-        <div class="p-8 border-t border-white/5">
-            <div class="max-w-4xl mx-auto flex gap-4">
-                <input id="user-input" type="text" placeholder="Type your answer..." 
-                       class="flex-1 glass-input rounded-2xl p-5 text-sm outline-none focus:border-indigo-500 text-white transition-all">
-                <button onclick="processNextStep()" class="px-10 bg-indigo-600 hover:bg-indigo-500 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-indigo-600/20">
-                    Next <i class="fas fa-arrow-right ml-2"></i>
+        <div class="h-32 input-area px-12 flex items-center">
+            <div class="w-full max-w-5xl mx-auto flex gap-5">
+                <input id="terminal-input" type="text" placeholder="Enter your response..." 
+                       class="flex-1 bg-transparent border-none text-sm outline-none placeholder:text-slate-700 text-white py-4 font-medium"
+                       onkeypress="if(event.key === 'Enter') handleInput()">
+                <button onclick="handleInput()" class="px-8 bg-indigo-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/20">
+                    Send <i class="fas fa-chevron-right ml-2"></i>
                 </button>
             </div>
         </div>
     </main>
 
     <script>
-        let currentStage = 0;
-        const stages = [
-            { id: 'personal', tip: 'Your name helps us personalize your policy docs.', question: 'Great. Now, what is your **Age** and **Annual Income**?' },
-            { id: 'health', tip: 'Medical data is processed by the Risk Agent[cite: 6].', question: 'Got it. Tell me about your **Health Profile**. Any smoking habits or pre-existing conditions?' },
-            { id: 'lifestyle', tip: 'Lifestyle choices affect your premium calculation.', question: 'Understood. Final step: please upload your **Medical/Vehicle Reports** for OCR ingestion.' },
-            { id: 'docs', tip: 'Our OCR Agent is extracting metrics now[cite: 6].', question: 'Analysis complete! View your results on the dashboard.' }
+        let currentStep = 0;
+        const workflow = [
+            { id: 'personal', nav: 'nav-personal', resp: 'Identity confirmed. Accessing **Health Profile** module. What is your current age and BMI?' },
+            { id: 'health', nav: 'nav-health', resp: 'Data received. Initiating **Lifestyle Analysis**. Do you have any smoking habits or high-risk occupations?' },
+            { id: 'lifestyle', nav: 'nav-lifestyle', resp: 'Risk patterns detected. Final step: **Document Ingestion**. Please upload your PDF reports.' },
+            { id: 'docs', nav: 'nav-docs', resp: 'Pipeline Complete. XGBoost models are processing your risk score now.' }
         ];
 
-        function processNextStep() {
-            const input = document.getElementById('user-input');
+        function handleInput() {
+            const input = document.getElementById('terminal-input');
             const flow = document.getElementById('chat-flow');
-            const tip = document.getElementById('ai-tip');
             
-            if (!input.value.trim() && currentStage < 3) return;
+            if (!input.value.trim()) return;
 
-            // Show User message
-            flow.innerHTML += `<div class="flex justify-end"><div class="bg-indigo-600 p-4 px-6 rounded-3xl text-sm max-w-sm font-semibold">${input.value}</div></div>`;
+            // User bubble
+            flow.innerHTML += `
+                <div class="flex justify-end animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div class="user-bubble px-6 py-3 rounded-2xl rounded-tr-none text-sm font-bold">${input.value}</div>
+                </div>
+            `;
+            
+            const userMsg = input.value;
             input.value = "";
             flow.scrollTop = flow.scrollHeight;
 
-            if (currentStage < stages.length) {
-                const step = stages[currentStage];
-                
-                setTimeout(() => {
-                    // Update Sidebar
-                    document.getElementById(`step-${step.id}`).classList.remove('step-active');
-                    document.getElementById(`step-${step.id}`).classList.add('opacity-100');
-                    document.getElementById(`step-${step.id}`).querySelector('.progress-circle').style.background = '#10b981';
-
-                    if (currentStage + 1 < stages.length) {
-                        const nextStep = stages[currentStage + 1];
-                        document.getElementById(`step-${nextStep.id}`).classList.add('step-active');
-                        tip.innerText = step.tip;
+            // Agent logic transition 
+            setTimeout(() => {
+                if (currentStep < workflow.length) {
+                    const step = workflow[currentStep];
+                    
+                    // Update Nav
+                    document.getElementById(step.nav).querySelector('.w-1.5').classList.remove('bg-indigo-500', 'shadow-[0_0_10px_#6366f1]');
+                    document.getElementById(step.nav).querySelector('.w-1.5').classList.add('bg-emerald-500');
+                    document.getElementById(step.nav).classList.remove('active');
+                    
+                    currentStep++;
+                    if (currentStep < workflow.length) {
+                        const nextNav = workflow[currentStep].nav;
+                        document.getElementById(nextNav).classList.add('active');
+                        document.getElementById(nextNav).querySelector('.w-1.5').classList.add('bg-indigo-500', 'shadow-[0_0_10px_#6366f1]');
                     }
 
-                    // Show AI Message
+                    // AI response
                     flow.innerHTML += `
-                        <div class="chat-bubble p-6 rounded-3xl max-w-xl animate-in fade-in slide-in-from-bottom-4">
-                            <p class="text-sm leading-relaxed text-slate-200">${step.question}</p>
+                        <div class="ai-bubble p-6 rounded-2xl rounded-tl-none max-w-lg animate-in fade-in slide-in-from-left-4 duration-500">
+                            <p class="text-sm leading-relaxed text-slate-200">${step.resp}</p>
                         </div>
                     `;
                     flow.scrollTop = flow.scrollHeight;
-                    currentStage++;
-                }, 800);
-            }
+                }
+            }, 800);
         }
     </script>
 </body>
