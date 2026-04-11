@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SureScore | AI Underwriting Dashboard</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .accent-text { background: linear-gradient(90deg, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen relative">
 
     <nav class="p-6 border-b border-white/5 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="p-2 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/20">
+                <div class="p-2 bg-indigo-600 rounded-lg shadow-lg">
                     <i class="fas fa-shield-halved text-white text-lg"></i>
                 </div>
                 <span class="text-xl font-extrabold tracking-tighter accent-text">SURESCORE</span>
@@ -29,7 +29,7 @@
             <div class="flex items-center gap-6">
                 <div class="hidden md:flex gap-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                     <span>Accuracy: 98% [cite: 108]</span>
-                    <span>Avg Time: < 5m [cite: 107]</span>
+                    <span>Avg Time: < 5m </span>
                 </div>
                 <div class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase">
                     <i class="fas fa-bolt animate-pulse mr-2"></i> Engine: Online
@@ -38,85 +38,48 @@
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-6 mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400"><i class="fas fa-robot"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Agents Active [cite: 35]</div><div class="text-lg font-bold">5 Specialized Units</div></div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400"><i class="fas fa-microchip"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Risk Engine [cite: 71]</div><div class="text-lg font-bold">XGBoost Optimized</div></div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400"><i class="fas fa-brain"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">XAI Protocol [cite: 73]</div><div class="text-lg font-bold">SHAP Active</div></div>
-        </div>
-    </div>
-
-    <main class="max-w-7xl mx-auto px-6 grid lg:grid-cols-5 gap-8 mt-8 pb-20">
-        
+    <main class="max-w-7xl mx-auto px-6 grid lg:grid-cols-5 gap-8 mt-12 pb-20">
         <div class="lg:col-span-2 space-y-6">
-            <div class="glass-card p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-                <div class="shimmer absolute inset-0 opacity-20 pointer-events-none"></div>
+            <div class="glass-card p-8 rounded-3xl shadow-2xl">
                 <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
                     <i class="fas fa-id-card text-indigo-400 text-sm"></i> New Application
                 </h2>
-                
-                <div class="space-y-4 relative">
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Applicant Identity</label>
-                        <input id="name" type="text" placeholder="Full Legal Name" 
-                               class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                    </div>
-                    
+                <div class="space-y-4">
+                    <input id="name" type="text" placeholder="Full Legal Name" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Age</label>
-                            <input id="age" type="number" placeholder="21" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Annual Income (₹)</label>
-                            <input id="income" type="number" placeholder="12,00,000" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none">
-                        </div>
+                        <input id="age" type="number" placeholder="Age" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none">
+                        <input id="income" type="number" placeholder="Income (₹)" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none">
                     </div>
-
-                    <div class="border-2 border-dashed border-slate-800 p-6 rounded-2xl text-center bg-slate-900/30">
-                        <i class="fas fa-file-pdf text-2xl text-slate-700 mb-2"></i>
-                        <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Data Ingestion [cite: 52]</p>
-                        <p class="text-[9px] text-slate-600 italic">OCR Agent handles unstructured reports</p>
-                    </div>
-
-                    <button onclick="runAssessment()" id="runBtn" 
-                            class="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 p-4 rounded-xl font-extrabold text-white shadow-lg uppercase tracking-widest text-xs transition-all active:scale-95">
+                    <button onclick="runAssessment()" id="runBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 p-4 rounded-xl font-extrabold text-white uppercase tracking-widest text-xs transition-all">
                         Assess Risk Profile
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="results" class="lg:col-span-3 space-y-6">
-            <div class="h-full min-h-[450px] glass-card rounded-3xl flex flex-col items-center justify-center text-slate-600 text-center p-12 border-dashed border-2 border-slate-800">
-                <i class="fas fa-terminal opacity-20 text-2xl mb-4"></i>
-                <p class="italic text-sm text-slate-500">System ready for data ingestion[cite: 43]. <br/> Decisions monitored for compliance[cite: 25, 41].</p>
+        <div id="results" class="lg:col-span-3">
+            <div class="h-full min-h-[400px] glass-card rounded-3xl flex flex-col items-center justify-center text-slate-600 text-center p-12 border-dashed border-2 border-slate-800">
+                <i class="fas fa-robot text-4xl mb-4 opacity-20"></i>
+                <p class="italic text-sm">System ready for data ingestion[cite: 43].</p>
             </div>
         </div>
     </main>
 
-    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl z-[100] hover:scale-110 transition-transform border border-indigo-400/30">
+    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl z-[100] border border-indigo-400/30">
         <i class="fas fa-robot text-white text-xl"></i>
     </button>
 
     <div id="chatWindow" class="fixed bottom-24 right-6 w-80 h-[400px] glass-card rounded-3xl shadow-2xl hidden flex-col overflow-hidden z-[100] border border-white/10">
-        <div class="p-4 bg-indigo-600/20 border-b border-white/5 flex justify-between items-center">
-            <span class="text-[10px] font-bold uppercase tracking-widest">NexusWeb Assistant [cite: 5]</span>
-            <button onclick="toggleChat()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+        <div class="p-4 bg-indigo-600 border-b border-white/5 flex justify-between items-center">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-white">NexusWeb Assistant</span>
+            <button onclick="toggleChat()" class="text-white opacity-70 hover:opacity-100"><i class="fas fa-times"></i></button>
         </div>
         <div id="chatContent" class="flex-1 p-4 overflow-y-auto space-y-4 text-[11px] scrollbar-hide">
             <div class="bg-indigo-500/10 p-3 rounded-2xl border border-indigo-500/20 text-slate-300">
-                Hello **Yash**! I'm the SureScore LLM Agent[cite: 54]. How can I assist with this underwriting case?
+                Hello! I'm the SureScore LLM Agent[cite: 54]. How can I assist with this underwriting case?
             </div>
         </div>
-        <div class="p-3 bg-slate-900/50 border-t border-white/5 flex gap-2">
+        <div class="p-3 bg-slate-900 border-t border-white/5 flex gap-2">
             <input id="chatInput" type="text" placeholder="Ask about SHAP insights..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-[10px] outline-none text-white" onkeypress="if(event.key === 'Enter') sendChatMessage()">
             <button onclick="sendChatMessage()" class="bg-indigo-600 px-4 rounded-lg"><i class="fas fa-paper-plane text-[10px] text-white"></i></button>
         </div>
@@ -140,11 +103,11 @@
             content.scrollTop = content.scrollHeight;
 
             setTimeout(() => {
-                let resp = "I'm analyzing that requirement against our current compliance rules[cite: 55].";
-                if (val.includes("risk")) resp = "Risk is calculated using XGBoost [cite: 71] and validated via SHAP explainability[cite: 73].";
-                if (val.includes("time")) resp = "Our multi-agent pipeline reduces processing from days to under 5 minutes[cite: 107].";
+                let resp = "I'm analyzing that through our multi-agent architecture.";
+                if (val.includes("risk")) resp = "Risk is calculated using XGBoost  and validated via SHAP[cite: 73, 93].";
+                if (val.includes("time")) resp = "Our pipeline reduces time from 3-10 days to under 5 minutes.";
                 
-                content.innerHTML += `<div class="bg-slate-800/80 p-3 rounded-2xl border border-white/5 max-w-[85%] text-slate-300"><i class="fas fa-robot mr-1 text-indigo-400"></i> ${resp}</div>`;
+                content.innerHTML += `<div class="bg-slate-800 p-3 rounded-2xl border border-white/5 max-w-[85%] text-slate-300"><i class="fas fa-robot mr-1 text-indigo-400"></i> ${resp}</div>`;
                 content.scrollTop = content.scrollHeight;
             }, 800);
         }
@@ -170,9 +133,9 @@
                 const data = await response.json();
                 
                 resDiv.innerHTML = `
-                    <div class="glass-card p-8 rounded-3xl border-t-4 border-indigo-500 shadow-2xl animate-in fade-in duration-500">
+                    <div class="glass-card p-8 rounded-3xl border-t-4 border-indigo-500 animate-in fade-in duration-500">
                         <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Decision: AI-Verified [cite: 103]</h3>
+                            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest text-indigo-400">AI-Verified Decision [cite: 103]</h3>
                             <div class="text-sm text-emerald-400 font-black uppercase tracking-tighter">${data.status}</div>
                         </div>
                         <div class="text-8xl font-black tracking-tighter mb-8">${data.risk_score}<span class="text-2xl text-slate-700 font-bold italic">/100</span></div>
@@ -181,23 +144,12 @@
                             <p class="text-slate-300 italic text-sm leading-relaxed border-l-2 border-indigo-500/30 pl-4">"${data.explanation}"</p>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="glass-card p-6 rounded-3xl">
-                            <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Monthly Premium</div>
-                            <div class="text-3xl font-black text-cyan-400">₹${data.suggested_premium}</div>
-                        </div>
-                        <button class="bg-white text-black p-6 rounded-3xl font-black uppercase tracking-widest text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">Approve Policy [cite: 42, 80] <i class="fas fa-check-circle"></i></button>
-                    </div>
-                    <div class="p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 text-[9px] text-indigo-400/70 flex items-center gap-2">
-                        <i class="fas fa-fingerprint text-emerald-500"></i>
-                        <span>Audit Log: Verified by NexusWeb Agentic Workflow[cite: 43]. Time: < 5 mins[cite: 107].</span>
-                    </div>
                 `;
             } catch (err) {
-                resDiv.innerHTML = `<div class="glass-card p-12 rounded-3xl text-center text-rose-500 italic uppercase font-bold tracking-widest">Connection Failed. Wake up Render Engine.</div>`;
-                btn.disabled = false;
+                resDiv.innerHTML = `<div class="glass-card p-12 rounded-3xl text-center text-rose-500 font-bold uppercase tracking-widest">Connection Error: Check API status.</div>`;
             } finally {
                 btn.innerHTML = 'Assess Risk Profile';
+                btn.disabled = false;
             }
         }
     </script>
