@@ -1,197 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SureScore | AI Underwriting Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        .accent-text { background: linear-gradient(90deg, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
-</head>
-<body class="min-h-screen">
+<button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl shadow-indigo-500/40 hover:scale-110 transition-all z-[100]">
+    <i class="fas fa-comment-dots text-white text-xl"></i>
+</button>
 
-    <nav class="p-6 border-b border-white/5 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="p-2 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/20">
-                    <i class="fas fa-shield-halved text-white text-lg"></i>
-                </div>
-                <span class="text-xl font-extrabold tracking-tighter accent-text">SURESCORE</span>
-            </div>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex gap-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                    <span>Accuracy: 98%</span>
-                    <span>Avg Time: < 5m [cite: 107]</span>
-                </div>
-                <div class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase">
-                    <i class="fas fa-bolt animate-pulse mr-2"></i> Engine: Online
-                </div>
-            </div>
+<div id="chatWindow" class="fixed bottom-24 right-6 w-80 h-96 glass-card rounded-3xl shadow-2xl hidden flex-col overflow-hidden z-[100] border border-white/10">
+    <div class="p-4 bg-indigo-600/20 border-b border-white/5 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span class="text-[10px] font-bold uppercase tracking-widest">Underwriting Assistant</span>
         </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-6 mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400"><i class="fas fa-robot"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Agents Active</div><div class="text-lg font-bold">5 Specialized Units </div></div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400"><i class="fas fa-microchip"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Risk Engine</div><div class="text-lg font-bold">XGBoost Optimized [cite: 71]</div></div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400"><i class="fas fa-brain"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">XAI Protocol</div><div class="text-lg font-bold">SHAP Active [cite: 73]</div></div>
+        <button onclick="toggleChat()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+    </div>
+    
+    <div id="chatContent" class="flex-1 p-4 overflow-y-auto space-y-4 text-[11px]">
+        <div class="bg-indigo-500/10 p-3 rounded-2xl border border-indigo-500/20 max-w-[80%]">
+            Hello Underwriter! How can I help you with **SureScore** assessments today?
         </div>
     </div>
 
-    <main class="max-w-7xl mx-auto px-6 grid lg:grid-cols-5 gap-8 mt-8 pb-20">
+    <div class="p-3 bg-slate-900/50 border-t border-white/5 flex gap-2">
+        <input id="chatInput" type="text" placeholder="Ask about policy rules..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-[10px] outline-none focus:border-indigo-500">
+        <button onclick="sendChatMessage()" class="bg-indigo-600 px-3 rounded-lg"><i class="fas fa-paper-plane text-[10px]"></i></button>
+    </div>
+</div>
+
+<script>
+    function toggleChat() {
+        const chat = document.getElementById('chatWindow');
+        chat.classList.toggle('hidden');
+        chat.classList.toggle('flex');
+    }
+
+    async function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const content = document.getElementById('chatContent');
+        if (!input.value) return;
+
+        // Add User Message
+        content.innerHTML += `<div class="bg-slate-800 p-3 rounded-2xl max-w-[80%] ml-auto text-right">${input.value}</div>`;
         
-        <div class="lg:col-span-2 space-y-6">
-            <div class="glass-card p-8 rounded-3xl shadow-2xl relative overflow-hidden">
-                <div class="shimmer absolute inset-0 opacity-20 pointer-events-none"></div>
-                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-                    <i class="fas fa-id-card text-indigo-400 text-sm"></i> New Application
-                </h2>
-                
-                <div class="space-y-4 relative">
-                    <div class="group">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block ml-1">Applicant Identity</label>
-                        <input id="name" type="text" placeholder="Full Legal Name" 
-                               class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-600">
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block ml-1">Age</label>
-                            <input id="age" type="number" placeholder="21" 
-                                   class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:border-indigo-500">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block ml-1">Annual Income (₹)</label>
-                            <input id="income" type="number" placeholder="12,00,000" 
-                                   class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:border-indigo-500">
-                        </div>
-                    </div>
+        const userMsg = input.value.toLowerCase();
+        input.value = "";
+        content.scrollTop = content.scrollHeight;
 
-                    <div class="border-2 border-dashed border-slate-800 p-6 rounded-2xl text-center bg-slate-900/30 group hover:border-indigo-500 transition-all cursor-pointer">
-                        <i class="fas fa-file-pdf text-2xl text-slate-700 group-hover:text-indigo-400 mb-2"></i>
-                        <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Data Ingestion</p>
-                        <p class="text-[9px] text-slate-600 mt-1 italic">OCR Agent handles unstructured reports </p>
-                    </div>
-
-                    <button onclick="runAssessment()" id="runBtn" 
-                            class="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 p-4 rounded-xl font-extrabold text-white shadow-lg shadow-indigo-600/20 uppercase tracking-[0.2em] text-xs transition-all active:scale-95">
-                        Assess Risk Profile
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="results" class="lg:col-span-3 space-y-6">
-            <div class="h-full min-h-[450px] glass-card rounded-3xl flex flex-col items-center justify-center text-slate-600 text-center p-12 border-dashed border-2 border-slate-800">
-                <div class="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mb-4">
-                    <i class="fas fa-terminal opacity-20 text-2xl"></i>
-                </div>
-                <p class="italic text-sm">System ready for data ingestion. <br/> Decisions monitored for compliance.</p>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        async function runAssessment() {
-            const btn = document.getElementById('runBtn');
-            const resDiv = document.getElementById('results');
+        // Simulated AI Response based on your Business Plan
+        setTimeout(() => {
+            let response = "I'm analyzing that requirement against our current compliance rules[cite: 55].";
+            if (userMsg.includes("risk")) response = "Risk is calculated using XGBoost and validated via SHAP explainability[cite: 71, 73].";
+            if (userMsg.includes("time")) response = "Our multi-agent pipeline reduces processing from days to under 5 minutes.";
             
-            // Step-by-step processing animation for the demo
-            btn.disabled = true;
-            let stages = ["Ingesting Data...", "Extracting Metrics...", "Running XGBoost...", "Generating XAI..."];
-            let i = 0;
-            const timer = setInterval(() => {
-                btn.innerHTML = `<i class="fas fa-circle-notch animate-spin mr-2"></i> ${stages[i]}`;
-                i = (i + 1) % stages.length;
-            }, 800);
-
-            try {
-                const API_BASE = "https://surescore-api.onrender.com";
-
-                const response = await fetch(`${API_BASE}/assess-risk`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: document.getElementById('name').value || "Guest",
-                        age: parseInt(document.getElementById('age').value) || 25,
-                        income: parseFloat(document.getElementById('income').value) || 500000
-                    })
-                });
-
-                clearInterval(timer);
-                if (!response.ok) throw new Error("API Failure");
-                const data = await response.json();
-                
-                resDiv.innerHTML = `
-                    <div class="glass-card p-8 rounded-3xl border-t-4 border-indigo-500 shadow-2xl animate-in fade-in zoom-in duration-500">
-                        <div class="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Underwriting Result</h3>
-                                <div class="text-xs text-indigo-400 font-bold mt-1 uppercase">Decision: AI-Verified [cite: 103]</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-[10px] text-slate-500 uppercase font-bold">Risk Level</div>
-                                <div class="text-sm text-emerald-400 font-black uppercase tracking-tighter">${data.status}</div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-baseline gap-2 mb-8">
-                            <span class="text-8xl font-black tracking-tighter">${data.risk_score}</span>
-                            <span class="text-2xl text-slate-700 font-bold italic">/100</span>
-                        </div>
-                        
-                        <div class="bg-slate-950/50 p-6 rounded-2xl border border-white/5">
-                            <div class="flex items-center gap-2 mb-4">
-                                <i class="fas fa-wand-magic-sparkles text-indigo-400 text-xs"></i>
-                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">SHAP Explainability Insights [cite: 73, 93]</div>
-                            </div>
-                            <p class="text-slate-300 italic text-sm leading-relaxed border-l-2 border-indigo-500/30 pl-4">"${data.explanation}"</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="glass-card p-6 rounded-3xl flex justify-between items-center">
-                            <div>
-                                <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Monthly Premium</div>
-                                <div class="text-3xl font-black text-cyan-400">₹${data.suggested_premium}</div>
-                            </div>
-                        </div>
-                        <button class="bg-white text-black p-6 rounded-3xl font-black uppercase tracking-widest text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
-                            Approve Policy <i class="fas fa-check-circle"></i>
-                        </button>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 text-[9px] text-indigo-400/70 flex items-center gap-2">
-                        <i class="fas fa-fingerprint text-emerald-500"></i>
-                        <span>Audit Log: Verified by NexusWeb Agentic Workflow. Time: < 5 mins[cite: 107]. Compliance: Secured.</span>
-                    </div>
-                `;
-            } catch (err) {
-                clearInterval(timer);
-                resDiv.innerHTML = `<div class="glass-card p-12 rounded-3xl text-center text-rose-500">
-                    <i class="fas fa-triangle-exclamation text-4xl mb-4"></i>
-                    <p class="font-bold uppercase tracking-widest">Connection Failed</p>
-                    <p class="text-xs text-slate-500 mt-2 italic text-center">API engine at Render is waking up. Please retry in 30 seconds.</p>
-                </div>`;
-                btn.disabled = false;
-            } finally {
-                btn.innerHTML = 'Assess Risk Profile';
-            }
-        }
-    </script>
-</body>
-</html>
+            content.innerHTML += `<div class="bg-indigo-500/10 p-3 rounded-2xl border border-indigo-500/20 max-w-[80%]">
+                <i class="fas fa-robot mr-1 text-indigo-400"></i> ${response}
+            </div>`;
+            content.scrollTop = content.scrollHeight;
+        }, 800);
+    }
+</script>
