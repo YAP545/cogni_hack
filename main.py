@@ -35,6 +35,16 @@ async def assess_risk(data: ApplicantData):
 async def upload_docs(file: File(...)):
     # Connects to Data Extraction Agent [cite: 52]
     return {"filename": file.filename, "status": "Parsing Unstructured Data..."}
+    from fastapi.middleware.cors import CORSMiddleware
+
+# ... (rest of your FastAPI code)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, replace with your frontend URL
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
