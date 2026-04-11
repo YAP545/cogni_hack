@@ -1,24 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SureScore – AI Underwriting Co-Pilot</title>
-    
-    <link rel="stylesheet" href="style.css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SureScore AI</title>
+
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <div id="app">
-        <section class="screen active" id="screen-landing">
-            <h1>SureScore AI</h1>
-            <p>Initializing your AI Underwriting Co-Pilot...</p>
-            <button class="btn-primary" onclick="startAssessment()">Start Assessment</button>
-        </section>
-    </div>
+<!-- REQUIRED CANVAS -->
+<canvas id="particleCanvas"></canvas>
 
-    <script src="app.js"></script>
+<div id="app">
+
+    <!-- LANDING -->
+    <section class="screen active" id="screen-landing">
+        <h1>SureScore AI</h1>
+        <button onclick="startAssessment()">Start Assessment</button>
+    </section>
+
+    <!-- CHAT -->
+    <section class="screen" id="screen-chat" style="display:none;">
+        <h2>Chat</h2>
+        <div id="chatMessages"></div>
+        <div id="chatInputArea"></div>
+    </section>
+
+    <!-- UPLOAD -->
+    <section class="screen" id="screen-upload" style="display:none;">
+        <h2>Upload</h2>
+        <input type="file" multiple onchange="handleFileSelect(event)">
+        <div id="fileList"></div>
+
+        <div id="extractionPanel" style="display:none;">
+            <div id="extBar"></div>
+            <p id="extStatus"></p>
+            <p id="extPct"></p>
+        </div>
+
+        <div id="extractedDataPanel" style="display:none;">
+            <button onclick="navigateTo('screen-processing')">Continue</button>
+        </div>
+    </section>
+
+    <!-- PROCESSING -->
+    <section class="screen" id="screen-processing" style="display:none;">
+        <h2>Processing</h2>
+        <div id="procLog"></div>
+        <span id="factorsVal"></span>
+        <span id="confVal"></span>
+        <span id="timeVal"></span>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="screen" id="screen-results" style="display:none;">
+        <canvas id="gaugeCanvas" width="300" height="300"></canvas>
+        <h2 id="gaugeNum"></h2>
+        <div id="riskLevelText"></div>
+        <div id="premiumVal"></div>
+    </section>
+
+</div>
+
+<script src="app.js"></script>
+
 </body>
 </html>
