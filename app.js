@@ -2,7 +2,11 @@
    app.js — SureScore AI Underwriting Co-Pilot
    ============================================================ */
 
-// ── Particle Canvas ────────────────────────────────────────────
+
+// Prevent null errors
+function safeGet(id) {
+  return document.getElementById(id) || { style:{}, textContent:"" };
+}// ── Particle Canvas ────────────────────────────────────────────
 (function initParticles() {
   const canvas = document.getElementById('particleCanvas');
   const ctx = canvas.getContext('2d');
