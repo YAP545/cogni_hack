@@ -3,130 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SureScore | AI Underwriting Platform</title>
+    <title>SureScore AI | Conversational Underwriting</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden;}
-        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .accent-text { background: linear-gradient(90deg, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hidden-stage { display: none; }
+        body { background-color: #0b0e1a; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+        .sidebar { background: #0f1225; border-right: 1px solid rgba(255,255,255,0.05); }
+        .chat-bubble { background: rgba(30, 34, 61, 0.6); border: 1px solid rgba(99, 102, 241, 0.2); backdrop-filter: blur(10px); }
+        .progress-circle { width: 20px; height: 20px; border: 2px solid #312e81; border-radius: 50%; }
+        .active-step { border-color: #6366f1; background: #6366f1; box-shadow: 0 0 10px #6366f1; }
+        .glass-input { background: rgba(15, 18, 36, 0.8); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
-<body>
+<body class="flex h-screen">
 
-    <div id="landing" class="min-h-screen flex flex-col items-center justify-center text-center p-6 bg-slate-950">
-        <div class="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl mb-6">
-            <i class="fas fa-shield-halved text-white text-4xl"></i>
+    <aside class="w-80 sidebar p-8 flex flex-col">
+        <div class="flex items-center gap-2 mb-12">
+            <div class="p-2 bg-indigo-600 rounded-lg"><i class="fas fa-check text-white text-xs"></i></div>
+            <span class="text-xl font-extrabold tracking-tighter italic">SureScore</span>
         </div>
-        <h1 class="text-6xl font-black mb-4 tracking-tighter">SURE<span class="accent-text">SCORE</span></h1>
-        <p class="text-slate-400 max-w-md mb-8 italic">End-to-end AI Underwriting Co-Pilot [Cite: 107]</p>
-        <button onclick="enterApp()" class="bg-indigo-500 px-10 py-4 rounded-full font-bold uppercase tracking-widest text-sm hover:scale-105 transition-all">Launch Platform</button>
-    </div>
 
-    <div id="dashboard" class="hidden-stage min-h-screen">
-        <nav class="p-6 border-b border-white/5 bg-slate-950/80 sticky top-0 flex justify-between items-center z-50">
-            <span class="text-xl font-black accent-text">SURESCORE AI</span>
-            <div class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">AGENT ENGINE: ONLINE</div>
-        </nav>
+        <div class="flex-1 space-y-8">
+            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Assessment Progress</div>
+            
+            <div class="flex items-center justify-between group">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-indigo-500/10 text-indigo-400"><i class="fas fa-user text-sm"></i></div>
+                    <div>
+                        <div class="text-xs font-bold text-white">Personal Info</div>
+                        <div class="text-[10px] text-indigo-400">In Progress</div>
+                    </div>
+                </div>
+                <div class="progress-circle active-step"></div>
+            </div>
 
-        <main class="max-w-7xl mx-auto px-6 py-12 grid lg:grid-cols-5 gap-8">
-            <div class="lg:col-span-2 space-y-6">
-                <div class="glass p-8 rounded-3xl">
-                    <h3 class="text-xl font-bold mb-6 italic text-indigo-400">Application Ingestion</h3>
-                    <div class="space-y-4">
-                        <input id="name" type="text" placeholder="Applicant Name" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none focus:border-indigo-500">
-                        <div class="grid grid-cols-2 gap-4">
-                            <input id="age" type="number" placeholder="Age" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none">
-                            <input id="income" type="number" placeholder="Income (₹)" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white outline-none">
-                        </div>
+            <div class="flex items-center justify-between opacity-40">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-slate-800 text-slate-400"><i class="fas fa-heart text-sm"></i></div>
+                    <div>
+                        <div class="text-xs font-bold">Health Profile</div>
+                        <div class="text-[10px]">Pending</div>
+                    </div>
+                </div>
+                <div class="progress-circle"></div>
+            </div>
+            
+            </div>
 
-                        <div class="relative group">
-                            <label class="border-2 border-dashed border-slate-800 p-6 rounded-2xl text-center bg-slate-900/30 block cursor-pointer group-hover:border-indigo-500 transition-all">
-                                <input type="file" id="pdfUpload" class="hidden" accept=".pdf">
-                                <i class="fas fa-file-pdf text-2xl text-slate-700 group-hover:text-indigo-400 mb-2"></i>
-                                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Upload Medical/Financial PDF</p>
-                                <p id="fileName" class="text-[9px] text-indigo-400 mt-1 italic">Data Extraction Agent Ready [Cite: 52]</p>
-                            </label>
-                        </div>
+        <div class="mt-auto glass-card p-4 rounded-2xl bg-indigo-900/10 border border-indigo-500/20">
+            <div class="text-[10px] font-bold text-indigo-400 uppercase mb-2"><i class="fas fa-robot mr-2"></i> AI Tip</div>
+            <p class="text-[10px] text-slate-400 leading-relaxed">Your name helps us personalize your policy documents.</p>
+        </div>
+    </aside>
 
-                        <button onclick="runAnalysis()" id="runBtn" class="w-full bg-indigo-600 p-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-indigo-500">Assess Risk Profile</button>
+    <main class="flex-1 flex flex-col relative bg-[#0b0e1a]">
+        <header class="p-6 flex justify-between items-center border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center shadow-lg"><i class="fas fa-robot text-white"></i></div>
+                <div>
+                    <div class="text-sm font-bold">SureScore AI</div>
+                    <div class="text-[10px] text-emerald-400 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Online • Analyzing your profile
                     </div>
                 </div>
             </div>
-            <div id="output" class="lg:col-span-3">
-                <div class="h-full min-h-[400px] glass rounded-3xl flex flex-col items-center justify-center text-slate-600 p-12 border-dashed border-2 border-slate-800 text-center">
-                    <i class="fas fa-microchip text-4xl mb-4 opacity-20"></i>
-                    <p>Awaiting Multi-Agent Pipeline execution... [Cite: 43]</p>
+            <div class="flex gap-2">
+                <button class="w-10 h-10 glass-input rounded-xl flex items-center justify-center"><i class="fas fa-microphone text-xs text-slate-400"></i></button>
+                <button class="w-10 h-10 glass-input rounded-xl flex items-center justify-center"><i class="fas fa-forward text-xs text-slate-400"></i></button>
+            </div>
+        </header>
+
+        <div id="chatHistory" class="flex-1 p-12 overflow-y-auto space-y-6">
+            <div class="chat-bubble p-6 rounded-3xl max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <p class="text-sm leading-relaxed text-slate-200">
+                    Hello! I'm your AI Underwriting Co-Pilot 🤖<br><br>
+                    Let's start with your **full name**. This helps personalize your assessment.
+                </p>
+            </div>
+        </div>
+
+        <div class="p-8 border-t border-white/5 bg-[#0b0e1a]">
+            <div class="max-w-4xl mx-auto relative">
+                <div class="text-[10px] font-bold text-slate-500 uppercase mb-3 ml-2 tracking-widest">Type your answer</div>
+                <div class="flex gap-4">
+                    <input id="userInput" type="text" placeholder="e.g. Yash Patil" 
+                           class="flex-1 glass-input rounded-2xl p-5 text-sm outline-none focus:border-indigo-500 transition-all text-white">
+                    <button onclick="handleResponse()" class="px-8 bg-indigo-600 hover:bg-indigo-500 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-indigo-600/20">
+                        Next <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                    </button>
                 </div>
             </div>
-        </main>
-    </div>
-
-    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center shadow-2xl z-[100] border-2 border-white/10"><i class="fas fa-robot text-white text-xl"></i></button>
-    <div id="chat" class="fixed bottom-24 right-6 w-80 h-96 glass rounded-3xl hidden flex-col overflow-hidden z-[100] border border-white/10">
-        <div class="p-4 bg-indigo-600 text-[10px] font-bold flex justify-between"><span>SURESCORE ASSISTANT</span><button onclick="toggleChat()"><i class="fas fa-times"></i></button></div>
-        <div id="logs" class="flex-1 p-4 overflow-y-auto text-[11px] space-y-3"><div class="bg-indigo-500/10 p-2 rounded-lg text-slate-300">Hello Yash! I can explain the SHAP insights for this case.</div></div>
-        <div class="p-3 bg-slate-900 flex gap-2 border-t border-white/5">
-            <input id="msg" type="text" class="flex-1 bg-black border border-slate-800 rounded p-2 text-white text-[10px]" placeholder="Ask about risk logic...">
-            <button onclick="send()" class="bg-indigo-600 px-3 rounded"><i class="fas fa-paper-plane text-white text-[10px]"></i></button>
         </div>
-    </div>
+    </main>
 
     <script>
-        // Update filename display
-        document.getElementById('pdfUpload').addEventListener('change', e => {
-            const name = e.target.files[0] ? e.target.files[0].name : "Data Extraction Agent Ready";
-            document.getElementById('fileName').innerText = "Selected: " + name;
-        });
+        function handleResponse() {
+            const input = document.getElementById('userInput');
+            const history = document.getElementById('chatHistory');
+            if (!input.value) return;
 
-        function enterApp() { document.getElementById('landing').style.display = 'none'; document.getElementById('dashboard').style.display = 'block'; }
-        function toggleChat() { document.getElementById('chat').classList.toggle('hidden'); document.getElementById('chat').classList.toggle('flex'); }
-        
-        function send() { 
-            const i = document.getElementById('msg'); 
-            const l = document.getElementById('logs'); 
-            if(!i.value) return;
-            l.innerHTML += `<div class="bg-indigo-600 p-2 rounded-lg ml-auto w-fit max-w-[80%]">${i.value}</div>`;
-            const v = i.value.toLowerCase(); i.value = "";
+            // Add User message
+            history.innerHTML += `
+                <div class="flex justify-end animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div class="bg-indigo-600 p-4 px-6 rounded-3xl text-sm max-w-sm font-semibold">${input.value}</div>
+                </div>
+            `;
+            
+            input.value = "";
+            history.scrollTop = history.scrollHeight;
+
+            // Trigger Agent Analysis Stage
             setTimeout(() => {
-                let r = "Analyzing metrics via the Multi-Agent Pipeline...";
-                if(v.includes("risk")) r = "Risk is scored using XGBoost. Current logic weights income-to-age stability heavily.";
-                l.innerHTML += `<div class="bg-slate-800 p-2 rounded-lg w-fit max-w-[80%]"><i class="fas fa-robot mr-1 text-indigo-400"></i> ${r}</div>`;
-                l.scrollTop = l.scrollHeight;
-            }, 800);
-        }
-
-        async function runAnalysis() {
-            const btn = document.getElementById('runBtn');
-            const out = document.getElementById('output');
-            btn.innerHTML = "RUNNING AGENTS..."; btn.disabled = true;
-
-            // FormData to handle File + Text
-            const formData = new FormData();
-            formData.append('name', document.getElementById('name').value || "Guest");
-            formData.append('age', document.getElementById('age').value || 21);
-            formData.append('income', document.getElementById('income').value || 1200000);
-            const fileInput = document.getElementById('pdfUpload');
-            if(fileInput.files[0]) formData.append('file', fileInput.files[0]);
-
-            try {
-                const res = await fetch("https://surescore-api.onrender.com/assess-risk", {
-                    method: 'POST',
-                    body: formData // Note: No 'Content-Type' header here, browser sets it for FormData
-                });
-                const data = await res.json();
-                out.innerHTML = `
-                    <div class="glass p-8 rounded-3xl border-t-4 border-indigo-500">
-                        <div class="flex justify-between items-center mb-6"><span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">AI-Verified Result [Cite: 103]</span><div class="text-xs text-emerald-400 font-bold uppercase">${data.status}</div></div>
-                        <div class="text-8xl font-black mb-8">${data.risk_score}<span class="text-2xl text-slate-700 italic">/100</span></div>
-                        <div class="bg-black/40 p-5 rounded-2xl border border-white/5 text-sm italic text-slate-300">SHAP Insights: "${data.explanation}" [Cite: 73]</div>
-                        <div class="mt-8 flex gap-4"><div class="flex-1 p-4 bg-slate-900 rounded-xl border border-white/5 text-xl font-bold text-cyan-400">₹${data.suggested_premium}</div><button class="bg-white text-black px-6 rounded-xl font-bold uppercase text-[10px]" onclick="alert('Policy Drafted!')">Approve [Cite: 13]</button></div>
+                history.innerHTML += `
+                    <div class="chat-bubble p-6 rounded-3xl max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <p class="text-sm leading-relaxed text-slate-200 italic">
+                            Got it. Now, let's look at your **Health Profile**. Please upload your medical reports when ready.
+                        </p>
                     </div>
                 `;
-            } catch (e) { out.innerHTML = `<div class="text-rose-500 font-bold uppercase">Connection Timeout. Please wake up the Render API.</div>`; }
-            finally { btn.innerHTML = "Assess Risk Profile"; btn.disabled = false; }
+                history.scrollTop = history.scrollHeight;
+            }, 800);
         }
     </script>
 </body>
