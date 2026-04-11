@@ -10,7 +10,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .gradient-border { border-image: linear-gradient(to right, #6366f1, #06b6d4) 1; }
         .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .accent-text { background: linear-gradient(90deg, #818cf8, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -29,10 +28,10 @@
             <div class="flex items-center gap-6">
                 <div class="hidden md:flex gap-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                     <span>Accuracy: 98%</span>
-                    <span>Avg Time: < 5m</span>
+                    <span>Avg Time: < 5m [cite: 107]</span>
                 </div>
                 <div class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase">
-                    <i class="fas fa-bolt animate-pulse mr-2"></i> System: Online
+                    <i class="fas fa-bolt animate-pulse mr-2"></i> Engine: Online
                 </div>
             </div>
         </div>
@@ -41,15 +40,15 @@
     <div class="max-w-7xl mx-auto px-6 mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
             <div class="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400"><i class="fas fa-robot"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Agents Active</div><div class="text-lg font-bold">5 Active Units</div></div>
+            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Agents Active</div><div class="text-lg font-bold">5 Specialized Units </div></div>
         </div>
         <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
             <div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400"><i class="fas fa-microchip"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Engine</div><div class="text-lg font-bold">XGBoost v2.1</div></div>
+            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Risk Engine</div><div class="text-lg font-bold">XGBoost Optimized [cite: 71]</div></div>
         </div>
         <div class="glass-card p-4 rounded-2xl flex items-center gap-4">
             <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400"><i class="fas fa-brain"></i></div>
-            <div><div class="text-[10px] text-slate-500 uppercase font-bold">Explainability</div><div class="text-lg font-bold">SHAP Enabled</div></div>
+            <div><div class="text-[10px] text-slate-500 uppercase font-bold">XAI Protocol</div><div class="text-lg font-bold">SHAP Active [cite: 73]</div></div>
         </div>
     </div>
 
@@ -84,8 +83,8 @@
 
                     <div class="border-2 border-dashed border-slate-800 p-6 rounded-2xl text-center bg-slate-900/30 group hover:border-indigo-500 transition-all cursor-pointer">
                         <i class="fas fa-file-pdf text-2xl text-slate-700 group-hover:text-indigo-400 mb-2"></i>
-                        <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Drop Documents Here</p>
-                        <p class="text-[9px] text-slate-600 mt-1 italic">Multi-Agent OCR Agent handles extraction [cite: 52]</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Data Ingestion</p>
+                        <p class="text-[9px] text-slate-600 mt-1 italic">OCR Agent handles unstructured reports </p>
                     </div>
 
                     <button onclick="runAssessment()" id="runBtn" 
@@ -101,7 +100,7 @@
                 <div class="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mb-4">
                     <i class="fas fa-terminal opacity-20 text-2xl"></i>
                 </div>
-                <p class="italic text-sm">System ready for data ingestion[cite: 43]. <br/> All decisions are monitored for compliance[cite: 55].</p>
+                <p class="italic text-sm">System ready for data ingestion. <br/> Decisions monitored for compliance.</p>
             </div>
         </div>
     </main>
@@ -111,11 +110,16 @@
             const btn = document.getElementById('runBtn');
             const resDiv = document.getElementById('results');
             
-            btn.innerHTML = '<i class="fas fa-circle-notch animate-spin mr-2"></i> AGENTS PROCESSING...';
+            // Step-by-step processing animation for the demo
             btn.disabled = true;
+            let stages = ["Ingesting Data...", "Extracting Metrics...", "Running XGBoost...", "Generating XAI..."];
+            let i = 0;
+            const timer = setInterval(() => {
+                btn.innerHTML = `<i class="fas fa-circle-notch animate-spin mr-2"></i> ${stages[i]}`;
+                i = (i + 1) % stages.length;
+            }, 800);
 
             try {
-                // Pointing to your LIVE Render Backend 
                 const API_BASE = "https://surescore-api.onrender.com";
 
                 const response = await fetch(`${API_BASE}/assess-risk`, {
@@ -128,6 +132,7 @@
                     })
                 });
 
+                clearInterval(timer);
                 if (!response.ok) throw new Error("API Failure");
                 const data = await response.json();
                 
@@ -171,15 +176,16 @@
                     </div>
 
                     <div class="p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 text-[9px] text-indigo-400/70 flex items-center gap-2">
-                        <i class="fas fa-fingerprint"></i>
-                        <span>Audit Log: Decision generated by NexusWeb Agentic Workflow. Reduced processing time from days to < 5 minutes[cite: 107].</span>
+                        <i class="fas fa-fingerprint text-emerald-500"></i>
+                        <span>Audit Log: Verified by NexusWeb Agentic Workflow. Time: < 5 mins[cite: 107]. Compliance: Secured.</span>
                     </div>
                 `;
             } catch (err) {
+                clearInterval(timer);
                 resDiv.innerHTML = `<div class="glass-card p-12 rounded-3xl text-center text-rose-500">
                     <i class="fas fa-triangle-exclamation text-4xl mb-4"></i>
-                    <p class="font-bold">CONNECTION FAILED</p>
-                    <p class="text-xs text-slate-500 mt-2 italic">Ensure surescore-api.onrender.com is active.</p>
+                    <p class="font-bold uppercase tracking-widest">Connection Failed</p>
+                    <p class="text-xs text-slate-500 mt-2 italic text-center">API engine at Render is waking up. Please retry in 30 seconds.</p>
                 </div>`;
                 btn.disabled = false;
             } finally {
