@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import uvicorn
 
 app = FastAPI()
 
-# CRITICAL: Allow your website to talk to your backend
+# FIX 1: Enhanced CORS (Allows everything for development)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,19 +21,14 @@ class Applicant(BaseModel):
 
 @app.post("/assess-risk")
 async def assess(data: Applicant):
-    # Simulated Multi-Agent Logic [cite: 35, 43]
-    # In a full build, this triggers Langflow agents [cite: 46]
-    risk_score = 24 
-    status = "Low Risk"
-    explanation = "Stable income and age demographic lead to a low risk profile[cite: 103]."
-    
+    # This simulates the Multi-Agent risk assessment from your PPT
     return {
-        "risk_score": risk_score,
-        "status": status,
-        "explanation": explanation,
+        "risk_score": 24,
+        "status": "Low Risk",
+        "explanation": f"Analysis for {data.name} complete. High income-to-age stability detected.",
         "suggested_premium": 2480.0
     }
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    # FIX 2: Bind to 0.0.0.0 to avoid IPv6/Localhost conflicts
+    uvicorn.run(app, host="0.0.0.0", port=8000)
