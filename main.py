@@ -5,7 +5,7 @@ import uvicorn
 
 app = FastAPI()
 
-# FIX 1: Enhanced CORS (Allows everything for development)
+# Enable CORS so your GitHub website can talk to this API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,16 +19,23 @@ class Applicant(BaseModel):
     age: int
     income: float
 
+@app.get("/")
+async def root():
+    return {"status": "SureScore AI Underwriting Engine Online"}
+
 @app.post("/assess-risk")
 async def assess(data: Applicant):
-    # This simulates the Multi-Agent risk assessment from your PPT
+    # Simulating the Multi-Agent Pipeline (XGBoost + SHAP)
+    # In a full build, this would call your Langflow nodes
+    risk_score = 24 if data.income > 800000 else 65
+    status = "Low Risk" if risk_score < 30 else "High Risk"
+    
     return {
-        "risk_score": 24,
-        "status": "Low Risk",
-        "explanation": f"Analysis for {data.name} complete. High income-to-age stability detected.",
-        "suggested_premium": 2480.0
+        "risk_score": risk_score,
+        "status": status,
+        "explanation": f"SHAP Insight: {data.name}'s income-to-age ratio is a primary risk reducer. Stability verified.",
+        "suggested_premium": 2480.0 if status == "Low Risk" else 5200.0
     }
 
 if __name__ == "__main__":
-    # FIX 2: Bind to 0.0.0.0 to avoid IPv6/Localhost conflicts
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=10000)
