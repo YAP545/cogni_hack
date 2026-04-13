@@ -3,77 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SureScore - Underwriting AI</title>
+    <title>SureScore AI Underwriting Co-Pilot</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+<body class="bg-[#F4F7F9] font-sans min-h-screen flex flex-col">
 
-    <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-md border border-gray-200">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center border-b pb-4">SureScore AI Prediction</h2>
-
-        <div class="space-y-4">
+    <header class="bg-white shadow-sm">
+        <div class="flex items-center justify-between px-8 py-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-[#0B2545] text-white p-2 rounded-lg">
+                    <i class="fa-solid fa-shield-halved text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-[#0B2545] tracking-wide">SURESCORE</h1>
+                    <p class="text-[10px] font-bold text-[#0B2545] tracking-widest uppercase">AI Underwriting Co-Pilot</p>
+                </div>
+            </div>
             <div>
-                <label class="block text-gray-600 text-sm font-semibold mb-1">Applicant Name</label>
-                <input type="text" id="applicantName" placeholder="e.g., Yash Patil" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                <input type="text" placeholder="Search products..." class="border border-gray-300 rounded-md px-4 py-2 text-sm w-64 focus:outline-none focus:border-[#0B2545]">
             </div>
+        </div>
+        <nav class="flex space-x-8 px-8 py-3 border-t border-gray-100 text-sm font-bold text-[#0B2545]">
+            <a href="#" class="hover:text-blue-600">HOME</a>
+            <a href="#" class="hover:text-blue-600">ABOUT AI AGENTS</a>
+            <a href="#" class="hover:text-blue-600">LIFE INSURANCE</a>
+            <a href="#" class="hover:text-blue-600">GROUP BUSINESS</a>
+            <a href="#" class="hover:text-blue-600">INVESTOR RELATIONS</a>
+            <a href="#" class="text-red-600 hover:text-red-700">PAY PREMIUM</a>
+        </nav>
+    </header>
 
-            <div><label class="block text-gray-600 text-sm font-semibold mb-1">Age</label>
-            <input type="number" id="age" placeholder="e.g., 45" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
+    <main class="flex-grow flex justify-center py-10 px-4">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-5xl border-t-[12px] border-[#0B2545] p-8">
             
-            <div><label class="block text-gray-600 text-sm font-semibold mb-1">Annual Income (₹)</label>
-            <input type="number" id="income" placeholder="e.g., 850000" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
+            <h2 class="text-2xl font-bold text-[#0B2545] mb-8 flex items-center">
+                <i class="fa-regular fa-id-card mr-3"></i> New Policy Application
+            </h2>
 
-            <div class="flex space-x-4">
-                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">BMI</label>
-                <input type="number" step="0.1" id="bmi" placeholder="e.g., 28.5" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 
-                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Is Smoker?</label>
-                <select id="smoker" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                    <option value="" disabled selected>Select...</option>
-                    <option value="1">Yes (1)</option>
-                    <option value="0">No (0)</option>
-                </select></div>
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 mb-4 tracking-wider">APPLICANT DETAILS</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="applicantName" placeholder="Full Name" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-800 focus:border-blue-400 focus:bg-white outline-none transition">
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="age" placeholder="Age" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-800 focus:border-blue-400 focus:bg-white outline-none transition">
+                            <input type="number" id="income" placeholder="Annual Income (₹)" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-800 focus:border-blue-400 focus:bg-white outline-none transition">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" step="0.1" id="bmi" placeholder="BMI" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-800 focus:border-blue-400 focus:bg-white outline-none transition">
+                            <select id="smoker" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-500 focus:border-blue-400 focus:bg-white outline-none transition">
+                                <option value="" disabled selected>Is Smoker?</option>
+                                <option value="1" class="text-black">Yes</option>
+                                <option value="0" class="text-black">No</option>
+                            </select>
+                        </div>
+
+                        <input type="number" id="conditions" placeholder="Number of Pre-existing Conditions" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-800 focus:border-blue-400 focus:bg-white outline-none transition">
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="glucose" placeholder="Glucose Level" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-800 focus:border-blue-400 focus:bg-white outline-none transition">
+                            <input type="number" id="cholesterol" placeholder="Cholesterol" class="w-full bg-[#EEF2F6] border border-transparent rounded-md p-3 text-gray-800 focus:border-blue-400 focus:bg-white outline-none transition">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 mb-4 tracking-wider">DOCUMENT INGESTION (OCR AGENT)</h3>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg h-[250px] flex flex-col items-center justify-center text-gray-400 hover:bg-gray-50 transition cursor-pointer">
+                        <i class="fa-solid fa-file-arrow-up text-4xl mb-3"></i>
+                        <p class="font-bold text-sm tracking-wide">UPLOAD MEDICAL REPORT</p>
+                    </div>
+
+                    <div id="outputArea" class="mt-6 p-4 rounded-lg hidden text-center border">
+                        <p class="text-sm text-gray-500" id="displayName"></p>
+                        <p class="text-xl mt-2">Risk Level: <span id="riskLevel" class="font-bold"></span></p>
+                        <p class="text-lg">Confidence Score: <span id="riskScore" class="font-bold text-[#0B2545]"></span></p>
+                    </div>
+                </div>
+
             </div>
 
-            <div><label class="block text-gray-600 text-sm font-semibold mb-1">Pre-existing Conditions</label>
-            <input type="number" id="conditions" placeholder="e.g., 2" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
-
-            <div class="flex space-x-4">
-                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Glucose Level</label>
-                <input type="number" id="glucose" placeholder="e.g., 145" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
-                
-                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Cholesterol</label>
-                <input type="number" id="cholesterol" placeholder="e.g., 240" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
-            </div>
-
-            <button id="submitBtn" onclick="submitForm()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mt-4 transition duration-300">
-                Analyze Risk
+            <button id="submitBtn" onclick="submitForm()" class="mt-10 w-full bg-[#0B2545] text-white font-bold py-4 rounded-md hover:bg-blue-900 transition flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-microchip" id="btnIcon"></i>
+                <span id="btnText">ANALYZE WITH AI AGENTS</span>
             </button>
-        </div>
 
-        <div class="mt-8 p-5 bg-gray-50 rounded-lg text-center shadow-inner">
-            <p class="text-md text-gray-500 mb-3" id="resultNameDisplay"></p>
-            <p class="text-lg">Risk Level: <span id="riskLevel" class="font-bold text-gray-400">Pending...</span></p>
-            <p class="text-lg">Risk Score: <span id="riskScore" class="font-bold text-gray-400">-- / 100</span></p>
         </div>
-    </div>
+    </main>
 
     <script>
         async function submitForm() {
-            // Check if any fields are empty before sending to AI
+            // Validate that required fields aren't empty
             if (!document.getElementById('age').value || !document.getElementById('income').value) {
-                alert("Please fill in all the numbers before analyzing risk!");
+                alert("Please fill in the applicant details before processing.");
                 return;
             }
 
-            const btn = document.getElementById('submitBtn');
-            const originalText = btn.innerText;
-            btn.innerText = "Analyzing...";
+            // Loading state
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+            const originalText = btnText.innerText;
             
-            // Get the Name just for the UI display
-            const applicantName = document.getElementById('applicantName').value || "Unknown Applicant";
+            btnText.innerText = "AGENTS PROCESSING...";
+            btnIcon.className = "fa-solid fa-spinner fa-spin";
 
-            // Gather the numbers to send to Python (Notice 'name' is NOT included here)
+            const applicantName = document.getElementById('applicantName').value || "Unknown";
+
             const customerData = {
                 age: parseInt(document.getElementById('age').value),
                 annual_income: parseFloat(document.getElementById('income').value),
@@ -91,31 +130,39 @@
                     body: JSON.stringify(customerData)
                 });
 
-                if (!response.ok) {
-                    throw new Error("Server Error");
-                }
+                if (!response.ok) throw new Error("Server Error");
 
                 const data = await response.json();
                 
-                const levelSpan = document.getElementById('riskLevel');
-                const scoreSpan = document.getElementById('riskScore');
-                const nameDisplay = document.getElementById('resultNameDisplay');
-
-                // Update the UI with the name and the AI results
-                nameDisplay.innerText = "Applicant: " + applicantName;
-                levelSpan.innerText = data.prediction.risk_level;
-                scoreSpan.innerText = data.prediction.risk_score + " / 100";
-
-                if (data.prediction.risk_level === 'High') levelSpan.className = 'font-bold text-red-600 text-xl';
-                else if (data.prediction.risk_level === 'Medium') levelSpan.className = 'font-bold text-yellow-500 text-xl';
-                else levelSpan.className = 'font-bold text-green-600 text-xl';
+                // Show the output area
+                document.getElementById('outputArea').classList.remove('hidden');
                 
-                scoreSpan.className = 'font-bold text-blue-600 text-xl';
+                // Update text
+                document.getElementById('displayName').innerText = "Applicant: " + applicantName;
+                document.getElementById('riskLevel').innerText = data.prediction.risk_level;
+                document.getElementById('riskScore').innerText = data.prediction.risk_score + " / 100";
+
+                // Colors for Risk Level
+                const levelSpan = document.getElementById('riskLevel');
+                const outputArea = document.getElementById('outputArea');
+                
+                if (data.prediction.risk_level === 'High') {
+                    levelSpan.className = 'font-bold text-red-600';
+                    outputArea.className = 'mt-6 p-4 rounded-lg text-center border-2 border-red-200 bg-red-50';
+                } else if (data.prediction.risk_level === 'Medium') {
+                    levelSpan.className = 'font-bold text-yellow-600';
+                    outputArea.className = 'mt-6 p-4 rounded-lg text-center border-2 border-yellow-200 bg-yellow-50';
+                } else {
+                    levelSpan.className = 'font-bold text-green-600';
+                    outputArea.className = 'mt-6 p-4 rounded-lg text-center border-2 border-green-200 bg-green-50';
+                }
 
             } catch (error) {
-                alert("Server error. Is the Python FastAPI running in the terminal?");
+                alert("Error connecting to SureScore AI. Is the Python backend running?");
             } finally {
-                btn.innerText = originalText;
+                // Restore button state
+                btnText.innerText = originalText;
+                btnIcon.className = "fa-solid fa-microchip";
             }
         }
     </script>
