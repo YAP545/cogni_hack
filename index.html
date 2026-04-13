@@ -12,37 +12,47 @@
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center border-b pb-4">SureScore AI Prediction</h2>
 
         <div class="space-y-4">
+            <div>
+                <label class="block text-gray-600 text-sm font-semibold mb-1">Applicant Name</label>
+                <input type="text" id="applicantName" placeholder="e.g., Yash Patil" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
+            </div>
+
             <div><label class="block text-gray-600 text-sm font-semibold mb-1">Age</label>
-            <input type="number" id="age" value="45" class="w-full border rounded-lg p-2"></div>
+            <input type="number" id="age" placeholder="e.g., 45" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
             
             <div><label class="block text-gray-600 text-sm font-semibold mb-1">Annual Income (₹)</label>
-            <input type="number" id="income" value="850000" class="w-full border rounded-lg p-2"></div>
+            <input type="number" id="income" placeholder="e.g., 850000" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
 
             <div class="flex space-x-4">
                 <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">BMI</label>
-                <input type="number" step="0.1" id="bmi" value="28.5" class="w-full border rounded-lg p-2"></div>
+                <input type="number" step="0.1" id="bmi" placeholder="e.g., 28.5" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
+                
                 <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Is Smoker?</label>
-                <select id="smoker" class="w-full border rounded-lg p-2">
-                    <option value="1">Yes (1)</option><option value="0">No (0)</option>
+                <select id="smoker" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                    <option value="" disabled selected>Select...</option>
+                    <option value="1">Yes (1)</option>
+                    <option value="0">No (0)</option>
                 </select></div>
             </div>
 
             <div><label class="block text-gray-600 text-sm font-semibold mb-1">Pre-existing Conditions</label>
-            <input type="number" id="conditions" value="2" class="w-full border rounded-lg p-2"></div>
+            <input type="number" id="conditions" placeholder="e.g., 2" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
 
             <div class="flex space-x-4">
                 <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Glucose Level</label>
-                <input type="number" id="glucose" value="145" class="w-full border rounded-lg p-2"></div>
+                <input type="number" id="glucose" placeholder="e.g., 145" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
+                
                 <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Cholesterol</label>
-                <input type="number" id="cholesterol" value="240" class="w-full border rounded-lg p-2"></div>
+                <input type="number" id="cholesterol" placeholder="e.g., 240" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
             </div>
 
-            <button id="submitBtn" onclick="submitForm()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mt-4">
+            <button id="submitBtn" onclick="submitForm()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mt-4 transition duration-300">
                 Analyze Risk
             </button>
         </div>
 
         <div class="mt-8 p-5 bg-gray-50 rounded-lg text-center shadow-inner">
+            <p class="text-md text-gray-500 mb-3" id="resultNameDisplay"></p>
             <p class="text-lg">Risk Level: <span id="riskLevel" class="font-bold text-gray-400">Pending...</span></p>
             <p class="text-lg">Risk Score: <span id="riskScore" class="font-bold text-gray-400">-- / 100</span></p>
         </div>
@@ -50,9 +60,20 @@
 
     <script>
         async function submitForm() {
+            // Check if any fields are empty before sending to AI
+            if (!document.getElementById('age').value || !document.getElementById('income').value) {
+                alert("Please fill in all the numbers before analyzing risk!");
+                return;
+            }
+
             const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerText;
             btn.innerText = "Analyzing...";
             
+            // Get the Name just for the UI display
+            const applicantName = document.getElementById('applicantName').value || "Unknown Applicant";
+
+            // Gather the numbers to send to Python (Notice 'name' is NOT included here)
             const customerData = {
                 age: parseInt(document.getElementById('age').value),
                 annual_income: parseFloat(document.getElementById('income').value),
@@ -70,23 +91,31 @@
                     body: JSON.stringify(customerData)
                 });
 
+                if (!response.ok) {
+                    throw new Error("Server Error");
+                }
+
                 const data = await response.json();
                 
                 const levelSpan = document.getElementById('riskLevel');
                 const scoreSpan = document.getElementById('riskScore');
+                const nameDisplay = document.getElementById('resultNameDisplay');
 
+                // Update the UI with the name and the AI results
+                nameDisplay.innerText = "Applicant: " + applicantName;
                 levelSpan.innerText = data.prediction.risk_level;
                 scoreSpan.innerText = data.prediction.risk_score + " / 100";
 
                 if (data.prediction.risk_level === 'High') levelSpan.className = 'font-bold text-red-600 text-xl';
                 else if (data.prediction.risk_level === 'Medium') levelSpan.className = 'font-bold text-yellow-500 text-xl';
                 else levelSpan.className = 'font-bold text-green-600 text-xl';
+                
                 scoreSpan.className = 'font-bold text-blue-600 text-xl';
 
             } catch (error) {
-                alert("Server error. Is the Python API running?");
+                alert("Server error. Is the Python FastAPI running in the terminal?");
             } finally {
-                btn.innerText = "Analyze Risk";
+                btn.innerText = originalText;
             }
         }
     </script>
