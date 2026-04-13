@@ -9,69 +9,50 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
 
     <div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-md border border-gray-200">
-        
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center border-b pb-4">SureScore AI Prediction</h2>
 
         <div class="space-y-4">
-            <div>
-                <label class="block text-gray-600 text-sm font-semibold mb-1">Age</label>
-                <input type="number" id="age" value="45" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-            </div>
-
-            <div>
-                <label class="block text-gray-600 text-sm font-semibold mb-1">Annual Income (₹)</label>
-                <input type="number" id="income" value="850000" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-            </div>
+            <div><label class="block text-gray-600 text-sm font-semibold mb-1">Age</label>
+            <input type="number" id="age" value="45" class="w-full border rounded-lg p-2"></div>
+            
+            <div><label class="block text-gray-600 text-sm font-semibold mb-1">Annual Income (₹)</label>
+            <input type="number" id="income" value="850000" class="w-full border rounded-lg p-2"></div>
 
             <div class="flex space-x-4">
-                <div class="w-1/2">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1">BMI</label>
-                    <input type="number" step="0.1" id="bmi" value="28.5" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                </div>
-                <div class="w-1/2">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1">Is Smoker?</label>
-                    <select id="smoker" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                        <option value="1">Yes (1)</option>
-                        <option value="0">No (0)</option>
-                    </select>
-                </div>
+                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">BMI</label>
+                <input type="number" step="0.1" id="bmi" value="28.5" class="w-full border rounded-lg p-2"></div>
+                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Is Smoker?</label>
+                <select id="smoker" class="w-full border rounded-lg p-2">
+                    <option value="1">Yes (1)</option><option value="0">No (0)</option>
+                </select></div>
             </div>
 
-            <div>
-                <label class="block text-gray-600 text-sm font-semibold mb-1">Pre-existing Conditions</label>
-                <input type="number" id="conditions" value="2" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-            </div>
+            <div><label class="block text-gray-600 text-sm font-semibold mb-1">Pre-existing Conditions</label>
+            <input type="number" id="conditions" value="2" class="w-full border rounded-lg p-2"></div>
 
             <div class="flex space-x-4">
-                <div class="w-1/2">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1">Glucose Level</label>
-                    <input type="number" id="glucose" value="145" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                </div>
-                <div class="w-1/2">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1">Cholesterol</label>
-                    <input type="number" id="cholesterol" value="240" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                </div>
+                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Glucose Level</label>
+                <input type="number" id="glucose" value="145" class="w-full border rounded-lg p-2"></div>
+                <div class="w-1/2"><label class="block text-gray-600 text-sm font-semibold mb-1">Cholesterol</label>
+                <input type="number" id="cholesterol" value="240" class="w-full border rounded-lg p-2"></div>
             </div>
 
-            <button id="submitBtn" onclick="submitForm()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 shadow-md transition duration-300 mt-4">
-                Submit Application
+            <button id="submitBtn" onclick="submitForm()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 mt-4">
+                Analyze Risk
             </button>
         </div>
 
-        <div class="mt-8 p-5 bg-gray-50 rounded-lg border border-gray-200 text-center shadow-inner">
-            <p class="text-lg text-gray-700 mb-2">Risk Level: <span id="riskLevel" class="font-bold text-gray-400">Pending...</span></p>
-            <p class="text-lg text-gray-700">Risk Score: <span id="riskScore" class="font-bold text-gray-400">-- / 100</span></p>
+        <div class="mt-8 p-5 bg-gray-50 rounded-lg text-center shadow-inner">
+            <p class="text-lg">Risk Level: <span id="riskLevel" class="font-bold text-gray-400">Pending...</span></p>
+            <p class="text-lg">Risk Score: <span id="riskScore" class="font-bold text-gray-400">-- / 100</span></p>
         </div>
     </div>
 
     <script>
         async function submitForm() {
-            // Change button text while processing
             const btn = document.getElementById('submitBtn');
-            const originalText = btn.innerText;
-            btn.innerText = "Analyzing Risk...";
+            btn.innerText = "Analyzing...";
             
-            // Gather data from the HTML inputs
             const customerData = {
                 age: parseInt(document.getElementById('age').value),
                 annual_income: parseFloat(document.getElementById('income').value),
@@ -83,48 +64,29 @@
             };
 
             try {
-                // Send data to your Python Server (FastAPI)
-                // IMPORTANT: Ensure uvicorn main:app --reload is running in your terminal!
                 const response = await fetch("http://127.0.0.1:8000/predict/health", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(customerData)
                 });
 
-                if (!response.ok) {
-                    throw new Error("Server error - check your Python terminal");
-                }
-
-                // Get the JSON response from Python
                 const data = await response.json();
-
-                // Get the spans where we display the output
-                const riskLevelSpan = document.getElementById('riskLevel');
-                const riskScoreSpan = document.getElementById('riskScore');
-
-                // Print the AI's output to the screen
-                riskLevelSpan.innerText = data.prediction.risk_level;
-                riskScoreSpan.innerText = data.prediction.risk_score;
-
-                // Color code the Risk Level (Red for High, Green for Low)
-                if (data.prediction.risk_level === 'High') {
-                    riskLevelSpan.className = 'font-bold text-red-600 text-xl';
-                } else if (data.prediction.risk_level === 'Medium') {
-                    riskLevelSpan.className = 'font-bold text-yellow-500 text-xl';
-                } else {
-                    riskLevelSpan.className = 'font-bold text-green-600 text-xl';
-                }
                 
-                riskScoreSpan.className = 'font-bold text-blue-600 text-xl';
+                const levelSpan = document.getElementById('riskLevel');
+                const scoreSpan = document.getElementById('riskScore');
+
+                levelSpan.innerText = data.prediction.risk_level;
+                scoreSpan.innerText = data.prediction.risk_score + " / 100";
+
+                if (data.prediction.risk_level === 'High') levelSpan.className = 'font-bold text-red-600 text-xl';
+                else if (data.prediction.risk_level === 'Medium') levelSpan.className = 'font-bold text-yellow-500 text-xl';
+                else levelSpan.className = 'font-bold text-green-600 text-xl';
+                scoreSpan.className = 'font-bold text-blue-600 text-xl';
 
             } catch (error) {
-                console.error("Connection failed:", error);
-                alert("Could not connect to the AI. Is your Python FastAPI terminal running?");
+                alert("Server error. Is the Python API running?");
             } finally {
-                // Reset the button
-                btn.innerText = originalText;
+                btn.innerText = "Analyze Risk";
             }
         }
     </script>
